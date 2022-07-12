@@ -1,9 +1,13 @@
-from flask_restx import  Namespace, Resource
+# external imports
+from flask_restx import Namespace, Resource
 from flask import request
+
+# internal imports
 from HR.models import organization_model
 from HR import db
 
 api = Namespace('Organization', description='Organization related API')
+
 
 @api.route('/info')
 class OrganizationInfo(Resource):
@@ -12,7 +16,7 @@ class OrganizationInfo(Resource):
     def get(self):
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
         org_ref = db.collection('organization').document(orgnization_ID)
-        orgnization_info =  org_ref.get().to_dict()
+        orgnization_info = org_ref.get().to_dict()
         orgnization_teams_ref = org_ref.collection('Teams').stream()
         orgnization_teams = []
         for team in orgnization_teams_ref:
@@ -24,13 +28,12 @@ class OrganizationInfo(Resource):
         for employee in orgnization_employees_ref:
             orgnization_employees.append(employee.to_dict())
         orgnization_info['Employees'] = orgnization_employees
-        
+
         return orgnization_info
 
     @api.doc(description='Update the Organization')
     @api.param('Name', 'New Organization Name')
     @api.param('Address', 'New Adress Description')
-
     def put(self):
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
         org_ref = db.collection('organization').document(orgnization_ID)
@@ -43,14 +46,15 @@ class OrganizationInfo(Resource):
 
         return orgnization_info
 
+
 @api.route('/teams')
 class OrganizationTeam(Resource):
     @api.doc(description='Get all teams in the Organization')
     def get(self):
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
-        teams_ref = db.collection('organization').document(orgnization_ID).collection('Teams').stream()
+        teams_ref = db.collection('organization').document(
+            orgnization_ID).collection('Teams').stream()
         teams = []
         for team in teams_ref:
             teams.append(team.to_dict())
-        return teams, 200            
-     
+        return teams, 200
