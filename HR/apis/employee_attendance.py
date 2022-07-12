@@ -4,7 +4,6 @@ from HR import db
 
 api = Namespace('Employee Attendance', description='Employee Attendance related APIs')
 
-@api.route('/')
+@api.route('/<string:employee_id>')
 class EmployeeAttendance(Resource):
-    def get(self):
-        return ''
+    pass
