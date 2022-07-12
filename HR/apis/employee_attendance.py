@@ -5,7 +5,7 @@ from flask import request
 # internal imports
 from HR import db
 from HR.models import employee_attend_model
-from HR.functions import *
+from HR.tools import *
 
 api = Namespace('Employee Attendance',
                 description='Employee Attendance related APIs')

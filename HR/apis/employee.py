@@ -5,7 +5,6 @@ from flask import request
 # internal imports
 from HR import db
 from HR.models import employee_add_model
-from HR.functions import *
 api = Namespace('Employee', description='Employee related APIs')
 
 
