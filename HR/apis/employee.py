@@ -72,13 +72,13 @@ class EmployeeInfo(Resource):
 
 
 @api.route('/')
-class Employee(Resource):
+class Employees(Resource):
     @api.doc(description="Create new employee")
     @api.expect(employee_add_model, validate=True)
     def post(self):
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
         employee_info = api.payload
-        employees_ref = db.collection('organization').document(
+        employees_ref = db.collection('Organization').document(
             organization_id).collection('Employees')
         if employees_ref.document(employee_info['ID']).get().exists:
             return {'message': 'Employee already exists'}, 400
@@ -87,7 +87,7 @@ class Employee(Resource):
             team_id = employee_info['TeamID']
         except KeyError:
             employee_info['TeamID'] = None
-        team_ref = db.collection('organization').document(
+        team_ref = db.collection('Organization').document(
             organization_id).collection('Teams').document(team_id)
         if not team_ref.get().exists:
             return {'message': 'Team not found'}, 404
