@@ -3,6 +3,7 @@ import calendar
 import datetime
 from flask import abort
 from flask_restx import fields
+from google.api_core.exceptions import InvalidArgument
 # internal imports
 from HR import db
 from HR import api
@@ -38,21 +39,16 @@ def is_employee_exists(employee_id):
     pass
 
 
-class organization():
-    organization_info = api.model('organization_info',  {
+class Organization():
+    Organization_info = api.model('Organization_info',  {
         "Name": fields.String(required=True, description="Organization Name"),
         "Address": fields.String(required=True, description="Organization Address"),
     })
-    
-    team_model = api.model('Team',
-                       {
-                           "Name": fields.String(required=True, description="Team Name"),
-                           "Description": fields.String(required=True, description="Team Description")
-                       }, strict=True)
+
     @staticmethod
     def get_info(orgnization_ID, teams=False, employees=False):
 
-        org_ref = db.collection('organization').document(orgnization_ID)
+        org_ref = db.collection('Organization').document(orgnization_ID)
         orgnization_info = org_ref.get().to_dict()
         if int(teams) == 1:
             orgnization_teams_ref = org_ref.collection('Teams').stream()
@@ -69,22 +65,65 @@ class organization():
             orgnization_info['Employees'] = orgnization_employees
         print(orgnization_info)
         return orgnization_info
-    
+
     @staticmethod
     def update(orgnization_ID, orgnization_info):
-        org_ref = db.collection('organization').document(orgnization_ID)
+        org_ref = db.collection('Organization').document(orgnization_ID)
         org_ref.update(orgnization_info)
         return org_ref.get().to_dict()
 
     @staticmethod
     def is_exists(orgnization_ID):
-        org_ref = db.collection('organization').document(orgnization_ID)
+        org_ref = db.collection('Organization').document(orgnization_ID)
         return org_ref.get().exists
-    
+
     @staticmethod
     def get_teams(orgnization_ID):
-        teams_ref = db.collection('organization').document(orgnization_ID).collection('Teams').stream()
-        teams = []
-        for team in teams_ref:
-            teams.append(team.to_dict())
+        teams_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Teams').stream()
+        teams = [team.to_dict() for team in teams_ref]
         return teams
+
+
+class Team:
+    team_info = api.model('Team',
+                          {
+                              "Name": fields.String(required=True, description="Team Name"),
+                              "Description": fields.String(required=True, description="Team Description")
+                          }, strict=True)
+    
+    employee_info = api.model('Employee', {
+    "ID": fields.String(required=True, description="Employee ID"),
+    "Name": fields.String(required=True, description="Employee Name"),
+    "Email": fields.String(required=True, description="Employee Email"),
+    "Phone": fields.String(required=True, description="Employee Phone"),
+    "Addres": fields.String(required=True, description="Employee Address"),
+    "TeamID": fields.String(required=False, description="Employee TeamID"),
+    }, strict=True)
+
+
+    @staticmethod
+    def create(orgnization_ID, team_info):
+        team_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Teams').document(team_info['Name'])
+
+        team_ref.set(team_info)
+        return team_ref.get().to_dict()
+
+    def is_exists(orgnization_ID, team_ID):
+        team_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Teams').document(team_ID)
+        return team_ref.get().exists, team_ref.get().to_dict()
+
+    def is_valid_name(orgnization_ID, team_name):
+        return team_name != '' 
+
+    def update(orgnization_ID, team_name, team_info):
+        db.collection('Organization').document(orgnization_ID).collection(
+            'Teams').document(team_name).update(team_info)
+        
+    def get_employees(orgnization_ID, team_name):
+        employees_ref = db.collection('Organization').document(orgnization_ID).collection(
+            'Employees').where('TeamID', '==', team_name).stream()
+        employees = [employee.to_dict() for employee in employees_ref]
+        return employees
