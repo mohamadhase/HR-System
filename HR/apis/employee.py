@@ -16,6 +16,8 @@ class EmployeeInfo(Resource):
     @api.doc(description="Get Spisific  employee information",security='apikey')
     @api.response(200, 'Employee Information', Employee.employee_info)
     @api.response(404, 'Employee Not Found')
+    @api.response(401, 'Unauthorized')
+
     @Authentication.token_required
     def get(organization_id,self, employee_id):
         # check if employee is exists
@@ -34,6 +36,7 @@ class EmployeeInfo(Resource):
     @api.param('employee_team_id', 'Employee TeamID')
     @api.response(200, 'Employee Information', Employee.employee_info)
     @api.response(404, 'Employee Not Found OR Team Not Found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def put(organization_id,self, employee_id):
         # check if employee is exists
@@ -63,6 +66,7 @@ class EmployeeInfo(Resource):
     @api.doc(description="Delete employee",security='apikey')
     @api.response(404, 'Employee Not Found')
     @api.response(200, 'Employee Deleted')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def delete(organization_id,self, employee_id):
         # check if employee is exists
@@ -80,6 +84,7 @@ class Employees(Resource):
     @api.response(200, 'Employee Created', Employee.employee_info)
     @api.response(404, 'Team Not Found ')
     @api.response(409, 'Employee Already Exists')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def post(organization_id,self):
         # get organization ID

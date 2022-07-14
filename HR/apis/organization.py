@@ -20,6 +20,8 @@ class OrganizationInfo(Resource):
     # add response for the teams and employees true and false
     @api.param('teams', 'spicify if you want to get teams or not', type=int, default=0)
     @api.param('employees', 'spicify if you want to get employees or not', type=int, default=0)
+    @api.response(401, 'Unauthorized')
+    
     @Authentication.token_required
     def get(orgnization_ID,self):
         teams = request.args.get('teams')
@@ -54,6 +56,7 @@ class OrganizationInfo(Resource):
     @api.param('Address', 'New Adress Description')
     @api.response(200, 'Organization updated', Organization.Organization_info)
     @api.response(404, 'Organization not found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def patch(orgnization_ID,self):
         # validate the orgnization_ID
@@ -83,6 +86,7 @@ class OrganizationTeam(Resource):
     @api.doc(description='Get all teams in the Organization',security='apikey')
     @api.response(200, 'success request', [Team.team_info])
     @api.response(404, 'Organization not found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def get(orgnization_ID,self):
         # validate the orgnization_ID
