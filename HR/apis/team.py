@@ -1,122 +1,157 @@
-from email.policy import strict
-from warnings import catch_warnings
-from flask_restx import  Namespace, Resource
+# external imports
+from flask_restx import Namespace, Resource
 from flask import request
-from HR.models import team_model, organization_model
+from flask import abort
+# internal imports
 from HR import db
-from google.cloud import firestore
-
+from HR.models.Team import Team
+from HR.models.Employee import Employee
 
 api = Namespace('Team', description='Team related API')
+
+
 @api.route('/')
-class Team(Resource):
+class TeamCreation(Resource):
     @api.doc(description="Create new team")
-    @api.expect(team_model, validate=True) 
+    @api.expect(Team.team_info, validate=True)
+    @api.response(201, 'Team created successfully', Team.team_info)
+    @api.response(409, 'Team With Same Name Already Exists')
+    @api.response(400, 'invalud team name')
     def post(self):
-        team_info = api.payload
+        # get organization ID
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
-        org_ref = db.collection('organization').document(orgnization_ID)
-        teams_ref = org_ref.collection('Teams').stream()
-        for team in teams_ref:
-            if team.to_dict()["Name"]== team_info['Name']:
-                return {'message': 'Team Name already exists'}, 400
+        # get team info from payload
+        team_info = api.payload
+        # check if team name is valid
+        if Team.is_valid_name(orgnization_ID, team_info['Name']) != True:
+            abort(400, 'invalid team name')
+        # check if team name is already exists
+        if Team.is_exists(orgnization_ID, team_info['Name'])[0]:
+            abort(409, 'Team with this name already exists')
+        # create team
+        return Team.create(orgnization_ID, team_info), 201
 
-
-        org_ref.collection('Teams').document(team_info['Name']).set(team_info)
-        return 'Team created successfully', 200
 
 @api.route('/<string:team_name>')
 class TeamInfo(Resource):
     @api.doc(description="Get Spisific  team information")
-    def get(self,team_name):
+    @api.response(200, 'Team Information', Team.team_info)
+    @api.response(404, 'Team Not Found')
+    def get(self, team_name):
+        # get organization ID
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
-        teams_ref = db.collection('organization').document(orgnization_ID).collection('Teams')
-        if teams_ref.document(team_name).get().exists:
-            return teams_ref.document(team_name).get().to_dict(), 200
-        return {'message': 'Team not found'}, 404
-
-
+        # check if team is exists
+        is_exist, team_info = Team.is_exists(orgnization_ID, team_name)
+        if is_exist == False:
+            abort(404, 'Team not found')
+        # return team info
+        return team_info, 200
 
     @api.doc(description="Update team information")
-    @api.param('Name', 'New Team Name')
     @api.param('Description', 'New Team Description')
-    def put(self,team_name):
+    @api.response(200, 'Team Information Updated', Team.team_info)
+    @api.response(404, 'Team Not Found')
+    @api.response(400, 'Description is required')
+    def patch(self, team_name):
+        # get organization ID
         orgnization_ID = 'n0sy1NF8qUHyy46b1gI9'
-        teams_ref = db.collection('organization').document(orgnization_ID).collection('Teams')
-        team_info = teams_ref.document(team_name).get()
-
-        if not team_info.exists :
-            return {'message': 'Team not found'}, 404
-        team_info = team_info.to_dict()
-        if request.args.get("Name"):
-            team_info['Name'] = request.args.get("Name")
+        # check if team is exists
+        is_exists, team_info = Team.is_exists(orgnization_ID, team_name)
+        if not is_exists:
+            abort(404, 'Team not found')
+        # get the  new description
         if request.args.get("Description"):
             team_info['Description'] = request.args.get("Description")
-        db.collection('organization').document(orgnization_ID).collection('Teams').document(team_name).update(team_info)
-        return 'Team updated successfully', 200
-   
-    
+        else:
+            abort('400', 'Description is required')
+        # update team info
+        Team.update(orgnization_ID, team_name, team_info)
 
-        
+        return team_info, 200
+
+    def delete(self, team_name):
+        # get organization ID
+        organization_ID = 'n0sy1NF8qUHyy46b1gI9'
+        # check if the team is exists
+        if not Team.is_exists(organization_ID, team_name)[0]:
+            abort(404, 'Team not found')
+        # delete team
+        Team.delete(organization_ID, team_name)
+        return 'Team Deleted', 200
+
+
 @api.route('/<string:team_name>/employees')
 class TeamEmployee(Resource):
     @api.doc(description="Get all employees in the team")
-    def get(self,team_name):
+    @api.response(200, 'Employees in the team', [Employee.employee_info])
+    @api.response(404, 'Team Not Found')
+    def get(self, team_name):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        team_ref = db.collection('organization').document(organization_id).collection('Teams').document(team_name)
-        if not  team_ref.get().exists:
-            return {'message': 'Team not found'}, 404
-
-        employees_ref = db.collection('organization').document(organization_id).collection('Employees').where('TeamID', '==', team_name).stream()
-        employees = []
-        for employee in employees_ref:
-            emp_info = employee.to_dict()
-            employees.append(emp_info)
-        return employees, 200
-
-
-
-
+        # check if team is exists
+        if Team.is_exists(organization_id, team_name)[0] == False:
+            abort(404, 'Team not found')
+        # get all employees in the team
+        return Team.get_employees(organization_id, team_name), 200
 
     @api.doc(description="Add employee to the team")
-    @api.param('employee_id', 'Employee ID',strict=True)
-    def post(self,team_name):
+    @api.param('employee_id', 'Employee ID', strict=True)
+    @api.response(200, 'Employee added to the team')
+    @api.response(404, 'Team Not Found OR Employee Not Found')
+    @api.response(409, 'Employee Already in the team')
+    def post(self, team_name):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        team_ref = db.collection('organization').document(organization_id).collection('Teams').document(team_name)
+        # get employee ID
         employee_id = request.args.get("employee_id")
-        if not team_ref.get().exists:
-            return {'message': 'Team not found'}, 404
+        # check employee id
+        if employee_id == None:
+            abort(400, 'employee_id is required')
+        # check if the team is exists
+        if Team.is_exists(organization_id, team_name)[0] == False:
+            abort(404, 'Team not found')
+        # check if employee is exists
+        validate_employee, employee_info = Employee.is_exists(
+            organization_id, employee_id)
+        if not validate_employee:
+            abort(404, 'Employee not found')
+        # check if employee is already in the team
+        if Employee.in_team(organization_id, employee_id):
+            abort(409, 'Employee is already in the team')
+        # add employee to the team
+        Employee.add_to_team(organization_id, employee_id, team_name)
+        return 'Employee added to the team', 200
 
-        employee_info = db.collection('organization').document(organization_id).collection('Employees').document(employee_id).get().to_dict()
-        try :
-            if employee_info['TeamID'] == team_name  :
-                return {'message': 'Employee already in  the given team'}, 400
-            elif employee_info['TeamID'] != None :
-                return {'message': 'Employee already in  team'}, 400
-            else:
-                raise KeyError
-        except KeyError:
-            employee_info['TeamID'] = team_name
-            db.collection('organization').document(organization_id).collection('Employees').document(employee_id).update(employee_info)
-            return 'Employee added to team', 200
-        
     @api.doc(description="Remove employee from the team")
-    @api.param('employee_id', 'Employee ID',strict=True)
-    def delete(self,team_name):
+    @api.param('employee_id', 'Employee ID', strict=True)
+    @api.response(200, 'Employee removed from the team', Employee.employee_info)
+    @api.response(404, 'Team Not Found OR Employee Not Found')
+    @api.response(409, 'Employee is not in the team')
+    @api.response(400, 'employee_id is required')
+    def delete(self, team_name):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
+        # get employee ID
         employee_id = request.args.get("employee_id")
-        if  employee_id == None:
-            return {'message': 'Missing parameters'}, 400
-        employee_info = db.collection('organization').document(organization_id).collection('Employees').document(employee_id).get()
-        if not employee_info.exists:
-            return {'message': 'Employee not found'}, 404
-        employee_info = employee_info.to_dict()
-        try :
-            if employee_info['TeamID'] == None:
-                return {'message': 'Employee not in team'}, 400
+        # check employee id
+        if employee_id == None:
+            abort(400, 'employee_id is required')
+        # check if the team is exists
+        if not Team.is_exists(organization_id, team_name)[0]:
+            abort(404, 'Team not found')
+        # check if employee is exists
+        validate_employee, employee_info = Employee.is_exists(
+            organization_id, employee_id)
+        if not validate_employee:
+            abort(404, 'Employee not found')
+        # check if employee is in the team
+        try:
+            if employee_info['TeamID'] != team_name:
+                abort(409, 'Employee not in the team')
         except KeyError:
-            return {'message': 'Employee not in team'}, 400
+            abort(409, 'Employee not in the team')
+        # remove employee from the team
         employee_info['TeamID'] = None
-        db.collection('organization').document(organization_id).collection('Employees').document(employee_id).update(employee_info)
-        return 'Employee removed from team', 200    
-    
+        # update employee in the database
+        Employee.update(organization_id, employee_id, employee_info)
+        return employee_info, 200
