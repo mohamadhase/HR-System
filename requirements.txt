@@ -1,0 +1,4 @@
+firebase_admin
+Flask
+flask_restx
+gunicorn==20.1.0
