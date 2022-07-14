@@ -5,23 +5,22 @@ from flask import abort, request
 # internal imports
 from HR import db
 from HR.models.Employee import Employee
-
+from HR.models.Authentication import Authentication
 api = Namespace('Employee Attendance',
                 description='Employee Attendance related APIs')
 
 
 @api.route('/<string:employee_id>/attendance')
 class EmployeeAttendance(Resource):
-    @api.doc(description="Get Spisific  employee attendance")
+    @api.doc(description="Get Spisific  employee attendance",security='apikey')
     @api.param('Day', 'Day of the month')
     @api.param('Month', 'Month of the year')
     @api.param('Year', 'Year')
     @api.response(200, 'Attendance found', Employee.attend_info)
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date')
-    def get(self, employee_id):
-        # get orgnization id from request
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @Authentication.token_required
+    def get(organization_id,self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -35,7 +34,7 @@ class EmployeeAttendance(Resource):
             abort(404, "Attendance not found")
         return attend_info, 200
 
-    @api.doc(description="Update employee attendance")
+    @api.doc(description="Update employee attendance",security='apikey')
     @api.param('Day', 'Day of the month', required=True)
     @api.param('Month', 'Month of the year', required=True)
     @api.param('Year', 'Year', required=True)
@@ -43,9 +42,8 @@ class EmployeeAttendance(Resource):
     @api.response(200, 'Attendance updated', Employee.attend_info)
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date or Bad Number of Hours')
-    def patch(self, employee_id):
-        # get orgnization id
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @Authentication.token_required
+    def patch(organization_id,self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -70,16 +68,15 @@ class EmployeeAttendance(Resource):
         Employee.update_attend(organization_id, employee_id, attend_date)
         return attend_date, 200
 
-    @api.doc(description="Delete employee attendance", params={'employee_id': 'Employee ID'})
+    @api.doc(description="Delete employee attendance", params={'employee_id': 'Employee ID'},security='apikey')
     @api.param('Day', 'Day of the month', required=True)
     @api.param('Month', 'Month of the year', required=True)
     @api.param('Year', 'Year', required=True)
     @api.response(200, 'Attendance deleted')
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date')
-    def delete(self, employee_id):
-        # get orgnization id
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @Authentication.token_required
+    def delete(organization_id,self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -95,15 +92,14 @@ class EmployeeAttendance(Resource):
         Employee.delete_attend(organization_id, employee_id, attend_date)
         return 'Attend deleted', 200
 
-    @api.doc(description="Add employee attendance")
+    @api.doc(description="Add employee attendance",security='apikey')
     @api.expect(Employee.attend_info, validate=True)
     @api.response(200, 'Attendance added', Employee.attend_info)
     @api.response(404, 'Employee not found')
     @api.response(400, 'Bad Date Or Bad Number of Hours')
     @api.response(409, 'Attendance already exists')
-    def post(self, employee_id):
-        # get orgnization id
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @Authentication.token_required
+    def post(organization_id,self, employee_id):
         # get attendance info
         attend_info = api.payload
         # validate employee id

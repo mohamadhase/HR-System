@@ -3,11 +3,19 @@ from flask import Flask
 from flask_restx import Api
 from firebase_admin import credentials, firestore, initialize_app
 
-
 app = Flask(__name__)
 app.config['ERROR_404_HELP'] = False
+app.config['SECRET_KEY'] = 'super-secret'
+authorization = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'x-acess-token',
+    }
+}
+
 api = Api(app, version='1.0', title='HR Mangement  API',
-          description='HR Mangement API')
+          description='HR Mangement API',authorizations=authorization)
 cred = credentials.Certificate(
     'HR/training2-project-firebase-adminsdk-wc6zh-34db789fab.json')
 defult_app = initialize_app(cred)
