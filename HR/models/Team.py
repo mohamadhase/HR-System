@@ -34,7 +34,7 @@ class Team:
     def update(orgnization_ID, team_name, team_info):
         db.collection('Organization').document(orgnization_ID).collection(
             'Teams').document(team_name).update(team_info)
-
+    
     @staticmethod
     def get_employees(orgnization_ID, team_name):
         employees_ref = db.collection('Organization').document(orgnization_ID).collection(

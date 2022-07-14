@@ -1,5 +1,8 @@
 from flask_restx import Namespace, Resource
 from flask import abort
+from HR import app
+import datetime
+import jwt
 # internal imports
 from HR import api
 from HR.models.Organization import Organization
@@ -23,8 +26,8 @@ class LogIn(Resource):
         if org_info['Password'] != cridintials['Password']:
             abort(401, 'Login Failed')
         #create a token for the user
-        return 'token here'
-        
+        token = jwt.encode({'UserName': org_info['UserName'],'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        return token
         
 
 @api.route('/register')
@@ -52,8 +55,5 @@ class Register(Resource):
 
 
 
-@api.route('/logout')
-class LogOut(Resource):
-    def post(self):
-        return 'LogOut'
+
         

@@ -16,6 +16,7 @@ class Organization():
 
 
     @staticmethod
+    
     def get_info(orgnization_ID, teams=False, employees=False):
 
         org_ref = db.collection('Organization').document(orgnization_ID)
@@ -33,7 +34,6 @@ class Organization():
             for employee in orgnization_employees_ref:
                 orgnization_employees.append(employee.to_dict())
             orgnization_info['Employees'] = orgnization_employees
-        print(orgnization_info)
         return orgnization_info
 
     @staticmethod
