@@ -1,23 +1,30 @@
 # external imports
 from flask_restx import Namespace, Resource
 from flask import request
+from flask import abort
 
 # internal imports
 from HR import db
-from HR.models import employee_add_model
+from HR.models.Team import Team
+from HR.models.Employee import Employee
 api = Namespace('Employee', description='Employee related APIs')
 
 
 @api.route('/<string:employee_id>')
 class EmployeeInfo(Resource):
     @api.doc(description="Get Spisific  employee information")
+    @api.response(200, 'Employee Information', Employee.employee_info)
+    @api.response(404, 'Employee Not Found')
     def get(self, employee_id):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        employee_ref = db.collection('organization').document(
-            organization_id).collection('Employees').document(employee_id)
-        if employee_ref.get().exists:
-            return employee_ref.get().to_dict(), 200
-        return {'message': 'Employee not found'}, 404
+        # check if employee is exists
+        validate_employee, employee_info = Employee.is_exists(
+            organization_id, employee_id)
+        if not validate_employee:
+            abort(404, 'Employee not found')
+        # return employee info
+        return employee_info, 200
 
     @api.doc(description="Update employee information")
     @api.param('employee_name', 'Employee Name')
@@ -25,14 +32,17 @@ class EmployeeInfo(Resource):
     @api.param('employee_phone', 'Employee Phone')
     @api.param('employee_address', 'Employee Address')
     @api.param('employee_team_id', 'Employee TeamID')
+    @api.response(200, 'Employee Information', Employee.employee_info)
+    @api.response(404, 'Employee Not Found OR Team Not Found')
     def put(self, employee_id):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        employee_ref = db.collection('organization').document(
-            organization_id).collection('Employees').document(employee_id)
-        if not employee_ref.get().exists:
-            return {'message': 'Employee not found'}, 404
-
-        employee_info = employee_ref.get().to_dict()
+        # check if employee is exists
+        validate_employee, employee_info = Employee.is_exists(
+            organization_id, employee_id)
+        if not validate_employee:
+            abort(404, 'Employee not found')
+        # get new information
         if request.args.get('employee_name'):
             employee_info['Name'] = request.args.get('employee_name')
         if request.args.get('employee_email'):
@@ -42,55 +52,50 @@ class EmployeeInfo(Resource):
         if request.args.get('employee_address'):
             employee_info['Address'] = request.args.get('employee_address')
         if request.args.get('employee_team_id'):
-            if db.collection('organization').document(organization_id).collection('Teams')\
-                    .document(request.args.get('employee_team_id')).get().exists:
+            # check if the team is exists
+            if Team.is_exists(organization_id, request.args.get('employee_team_id'))[0]:
                 employee_info['TeamID'] = request.args.get('employee_team_id')
             else:
-                return {'message': 'Team not found'}, 404
-        employee_ref.set(employee_info)
-        return {'message': 'Employee updated successfully'}, 200
+                abort(404, 'Team not found')
+        # update employee info
+        Employee.update(organization_id, employee_id, employee_info)
+        return employee_info, 200
 
-    @api.doc(description="Delete employee information")
+    @api.doc(description="Delete employee")
+    @api.response(404, 'Employee Not Found')
+    @api.response(200, 'Employee Deleted')
     def delete(self, employee_id):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        employee_ref = db.collection('organization').document(
-            organization_id).collection('Employees').document(employee_id)
-        if employee_ref.get().exists:
-            employee_ref.delete()
-            return {'message': 'Employee deleted successfully'}, 200
-        return {'message': 'Employee not found'}, 404
-
-    @api.doc(description="Delete employee", params={'employee_id': 'Employee ID'})
-    def delete(self, employee_id):
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
-        employee_ref = db.collection('organization').document(
-            organization_id).collection('Employees').document(employee_id)
-        if employee_ref.get().exists:
-            employee_ref.delete()
-            return {'message': 'Employee deleted'}, 200
-        return {'message': 'Employee not found'}, 404
+        # check if employee is exists
+        if not Employee.is_exists(organization_id, employee_id)[0]:
+            abort(404, 'Employee not found')
+        # delete employee
+        Employee.delete(organization_id, employee_id)
+        return 'Employee Deleted', 200
 
 
 @api.route('/')
 class Employees(Resource):
     @api.doc(description="Create new employee")
-    @api.expect(employee_add_model, validate=True)
+    @api.expect(Employee.employee_info, validate=True)
+    @api.response(200, 'Employee Created', Employee.employee_info)
+    @api.response(404, 'Team Not Found ')
+    @api.response(409, 'Employee Already Exists')
     def post(self):
+        # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
+        # get new employee information
         employee_info = api.payload
-        employees_ref = db.collection('Organization').document(
-            organization_id).collection('Employees')
-        if employees_ref.document(employee_info['ID']).get().exists:
-            return {'message': 'Employee already exists'}, 400
-        team_id = None
+        # check if the employee is exists
+        if Employee.is_exists(organization_id, employee_info['ID'])[0]:
+            abort(409, 'Employee already exists')
+        # chcek if the team is exists
         try:
-            team_id = employee_info['TeamID']
+            if not Team.is_exists(organization_id, employee_info['TeamID'])[0]:
+                abort(404, 'Team not found')
         except KeyError:
+            # if team is not exists, set team id to None
             employee_info['TeamID'] = None
-        team_ref = db.collection('Organization').document(
-            organization_id).collection('Teams').document(team_id)
-        if not team_ref.get().exists:
-            return {'message': 'Team not found'}, 404
-
-        employees_ref.document(employee_info['ID']).set(employee_info)
-        return 'Employee created successfully', 200
+        # create new employee
+        return Employee.create(organization_id, employee_info), 200
