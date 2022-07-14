@@ -19,6 +19,7 @@ class EmployeeAttendance(Resource):
     @api.response(200, 'Attendance found', Employee.attend_info)
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def get(organization_id,self, employee_id):
         # validate employee id
@@ -42,6 +43,8 @@ class EmployeeAttendance(Resource):
     @api.response(200, 'Attendance updated', Employee.attend_info)
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date or Bad Number of Hours')
+    @api.response(401, 'Unauthorized')
+
     @Authentication.token_required
     def patch(organization_id,self, employee_id):
         # validate employee id
@@ -75,6 +78,8 @@ class EmployeeAttendance(Resource):
     @api.response(200, 'Attendance deleted')
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date')
+    @api.response(401, 'Unauthorized')
+
     @Authentication.token_required
     def delete(organization_id,self, employee_id):
         # validate employee id
@@ -98,6 +103,8 @@ class EmployeeAttendance(Resource):
     @api.response(404, 'Employee not found')
     @api.response(400, 'Bad Date Or Bad Number of Hours')
     @api.response(409, 'Attendance already exists')
+    @api.response(401, 'Unauthorized')
+    
     @Authentication.token_required
     def post(organization_id,self, employee_id):
         # get attendance info

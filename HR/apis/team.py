@@ -17,6 +17,7 @@ class TeamCreation(Resource):
     @api.response(201, 'Team created successfully', Team.team_info)
     @api.response(409, 'Team With Same Name Already Exists')
     @api.response(400, 'invalud team name')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def post(orgnization_ID,self):
 
@@ -37,6 +38,7 @@ class TeamInfo(Resource):
     @api.doc(description="Get Spisific  team information",security='apikey')
     @api.response(200, 'Team Information', Team.team_info)
     @api.response(404, 'Team Not Found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def get(orgnization_ID,self, team_name):
         # check if team is exists
@@ -51,6 +53,7 @@ class TeamInfo(Resource):
     @api.response(200, 'Team Information Updated', Team.team_info)
     @api.response(404, 'Team Not Found')
     @api.response(400, 'Description is required')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def patch(orgnization_ID,self, team_name):
         # check if team is exists
@@ -69,6 +72,7 @@ class TeamInfo(Resource):
     @api.doc(description="Delete team",security='apikey')
     @api.response(200, 'Team Deleted')
     @api.response(404, 'Team Not Found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def delete(organization_ID,self, team_name):
         # check if the team is exists
@@ -84,6 +88,7 @@ class TeamEmployee(Resource):
     @api.doc(description="Get all employees in the team",security='apikey')
     @api.response(200, 'Employees in the team', [Employee.employee_info])
     @api.response(404, 'Team Not Found')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def get(organization_id,self, team_name):
         # check if team is exists
@@ -97,6 +102,7 @@ class TeamEmployee(Resource):
     @api.response(200, 'Employee added to the team')
     @api.response(404, 'Team Not Found OR Employee Not Found')
     @api.response(409, 'Employee Already in the team')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def post(organization_id,self, team_name):
         # get employee ID
@@ -125,6 +131,7 @@ class TeamEmployee(Resource):
     @api.response(404, 'Team Not Found OR Employee Not Found')
     @api.response(409, 'Employee is not in the team')
     @api.response(400, 'employee_id is required')
+    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def delete(organization_id,self, team_name):
         # get employee ID
