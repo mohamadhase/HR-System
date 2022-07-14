@@ -27,7 +27,7 @@ class Team:
         return team_ref.get().exists, team_ref.get().to_dict()
 
     @staticmethod
-    def is_valid_name(orgnization_ID, team_name):
+    def is_valid_name(team_name):
         return team_name != ''
 
     @staticmethod

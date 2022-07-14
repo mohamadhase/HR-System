@@ -1,5 +1,4 @@
 # external imports
-import enum
 from flask_restx import Namespace, Resource
 from flask import abort, request
 
@@ -75,6 +74,14 @@ class OrganizationInfo(Resource):
 
         # update the Organization info in the database
         return Organization.update(orgnization_ID, orgnization_info)
+    
+
+
+        
+        
+        
+        
+        
 
 
 @api.route('/teams')
@@ -89,3 +96,4 @@ class OrganizationTeam(Resource):
         if not Organization.is_exists(orgnization_ID):
             abort(404, 'Organization not found')
         return Organization.get_teams(orgnization_ID)
+    
