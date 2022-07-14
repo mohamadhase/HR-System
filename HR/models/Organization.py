@@ -1,5 +1,8 @@
 # external imports
 from flask_restx import fields
+import hashlib
+
+from rsa import decrypt, encrypt
 # internal imports
 from HR import db
 from HR import api
@@ -9,6 +12,10 @@ class Organization():
     Organization_info = api.model('Organization_info',  {
         "Name": fields.String(required=True, description="Organization Name"),
         "Address": fields.String(required=True, description="Organization Address"),
+    })
+    register_orgnization = api.inherit('Register Organization', Organization_info, {
+        'UserName': fields.String(required=True, description="Organization User Name"),
+        'Password': fields.String(required=True, description="Organization Password")
     })
 
     @staticmethod
@@ -49,3 +56,11 @@ class Organization():
             orgnization_ID).collection('Teams').stream()
         teams = [team.to_dict() for team in teams_ref]
         return teams
+    @staticmethod
+    def encrypt_password(password):
+        # encrypt the password using sha256
+        return hashlib.sha256(password.encode()).hexdigest()
+    def register(org_info):
+        db.collection('Organization').document(org_info['UserName']).set(org_info)
+        
+       

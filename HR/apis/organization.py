@@ -1,5 +1,5 @@
 # external imports
-import enum
+from attr import validate
 from flask_restx import Namespace, Resource
 from flask import abort, request
 
@@ -75,6 +75,31 @@ class OrganizationInfo(Resource):
 
         # update the Organization info in the database
         return Organization.update(orgnization_ID, orgnization_info)
+    
+    @api.doc(description='Register')
+    @api.expect(Organization.register_orgnization,validate=True)
+    @api.response(200, 'Organization registered', Organization.Organization_info)
+    @api.response(409, 'Organization already exists')
+    @api.response(400, 'Invalid arguments')
+    def post(self):
+        #get the new Organization info
+        org_info  = api.payload
+        #check user_name
+        if org_info['UserName']=='':
+            abort(400, 'Organization name is required')
+        #check if the Organization already exists
+        if Organization.is_exists(org_info['UserName']):
+            abort(409, 'Organization with same username already exists')
+        #encrypt the password
+        org_info['Password'] = Organization.encrypt_password(org_info['Password'])
+        #register the Organization
+        Organization.register(org_info)
+        return {'message': 'Organization registered'}, 201
+        
+        
+        
+        
+        
 
 
 @api.route('/teams')
