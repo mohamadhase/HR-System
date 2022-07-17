@@ -54,3 +54,4 @@ class Team:
         team_ref = db.collection('Organization').document(
             orgnization_ID).collection('Teams').document(team_name)
         team_ref.delete()
+
