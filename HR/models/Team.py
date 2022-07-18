@@ -27,14 +27,14 @@ class Team:
         return team_ref.get().exists, team_ref.get().to_dict()
 
     @staticmethod
-    def is_valid_name(orgnization_ID, team_name):
+    def is_valid_name(team_name):
         return team_name != ''
 
     @staticmethod
     def update(orgnization_ID, team_name, team_info):
         db.collection('Organization').document(orgnization_ID).collection(
             'Teams').document(team_name).update(team_info)
-
+    
     @staticmethod
     def get_employees(orgnization_ID, team_name):
         employees_ref = db.collection('Organization').document(orgnization_ID).collection(
@@ -54,3 +54,4 @@ class Team:
         team_ref = db.collection('Organization').document(
             orgnization_ID).collection('Teams').document(team_name)
         team_ref.delete()
+

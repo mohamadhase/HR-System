@@ -1,5 +1,8 @@
 # external imports
 from flask_restx import fields
+import hashlib
+
+
 # internal imports
 from HR import db
 from HR import api
@@ -11,7 +14,9 @@ class Organization():
         "Address": fields.String(required=True, description="Organization Address"),
     })
 
+
     @staticmethod
+    
     def get_info(orgnization_ID, teams=False, employees=False):
 
         org_ref = db.collection('Organization').document(orgnization_ID)
@@ -29,7 +34,6 @@ class Organization():
             for employee in orgnization_employees_ref:
                 orgnization_employees.append(employee.to_dict())
             orgnization_info['Employees'] = orgnization_employees
-        print(orgnization_info)
         return orgnization_info
 
     @staticmethod
@@ -49,3 +53,6 @@ class Organization():
             orgnization_ID).collection('Teams').stream()
         teams = [team.to_dict() for team in teams_ref]
         return teams
+
+        
+       

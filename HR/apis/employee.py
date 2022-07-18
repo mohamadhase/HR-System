@@ -7,17 +7,19 @@ from flask import abort
 from HR import db
 from HR.models.Team import Team
 from HR.models.Employee import Employee
+from HR.models.Authentication import Authentication
 api = Namespace('Employee', description='Employee related APIs')
 
 
 @api.route('/<string:employee_id>')
 class EmployeeInfo(Resource):
-    @api.doc(description="Get Spisific  employee information")
+    @api.doc(description="Get Spisific  employee information",security='apikey')
     @api.response(200, 'Employee Information', Employee.employee_info)
     @api.response(404, 'Employee Not Found')
-    def get(self, employee_id):
-        # get organization ID
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @api.response(401, 'Unauthorized')
+
+    @Authentication.token_required
+    def get(organization_id,self, employee_id):
         # check if employee is exists
         validate_employee, employee_info = Employee.is_exists(
             organization_id, employee_id)
@@ -26,7 +28,7 @@ class EmployeeInfo(Resource):
         # return employee info
         return employee_info, 200
 
-    @api.doc(description="Update employee information")
+    @api.doc(description="Update employee information",security='apikey')
     @api.param('employee_name', 'Employee Name')
     @api.param('employee_email', 'Employee Email')
     @api.param('employee_phone', 'Employee Phone')
@@ -34,9 +36,9 @@ class EmployeeInfo(Resource):
     @api.param('employee_team_id', 'Employee TeamID')
     @api.response(200, 'Employee Information', Employee.employee_info)
     @api.response(404, 'Employee Not Found OR Team Not Found')
-    def put(self, employee_id):
-        # get organization ID
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @api.response(401, 'Unauthorized')
+    @Authentication.token_required
+    def put(organization_id,self, employee_id):
         # check if employee is exists
         validate_employee, employee_info = Employee.is_exists(
             organization_id, employee_id)
@@ -61,12 +63,12 @@ class EmployeeInfo(Resource):
         Employee.update(organization_id, employee_id, employee_info)
         return employee_info, 200
 
-    @api.doc(description="Delete employee")
+    @api.doc(description="Delete employee",security='apikey')
     @api.response(404, 'Employee Not Found')
     @api.response(200, 'Employee Deleted')
-    def delete(self, employee_id):
-        # get organization ID
-        organization_id = 'n0sy1NF8qUHyy46b1gI9'
+    @api.response(401, 'Unauthorized')
+    @Authentication.token_required
+    def delete(organization_id,self, employee_id):
         # check if employee is exists
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, 'Employee not found')
@@ -77,12 +79,14 @@ class EmployeeInfo(Resource):
 
 @api.route('/')
 class Employees(Resource):
-    @api.doc(description="Create new employee")
+    @api.doc(description="Create new employee",security='apikey')
     @api.expect(Employee.employee_info, validate=True)
     @api.response(200, 'Employee Created', Employee.employee_info)
     @api.response(404, 'Team Not Found ')
     @api.response(409, 'Employee Already Exists')
-    def post(self):
+    @api.response(401, 'Unauthorized')
+    @Authentication.token_required
+    def post(organization_id,self):
         # get organization ID
         organization_id = 'n0sy1NF8qUHyy46b1gI9'
         # get new employee information
