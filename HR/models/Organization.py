@@ -1,4 +1,5 @@
 # external imports
+from typing import Tuple
 from flask_restx import fields
 # internal imports
 from HR import db
@@ -14,7 +15,7 @@ class Organization():
     })
 
     @staticmethod
-    def get_info(orgnization_ID, teams=False, employees=False):
+    def get_info(orgnization_ID:str, teams=False, employees=False)->dict:
         """get the information of an organization from the database 
 
         Args:
@@ -41,7 +42,7 @@ class Organization():
         return orgnization_info
 
     @staticmethod
-    def update(orgnization_ID, orgnization_info):
+    def update(orgnization_ID:str, orgnization_info:dict)->dict:
         """update the information of an organization in the database
 
         Args:
@@ -56,7 +57,7 @@ class Organization():
         return org_ref.get().to_dict()
 
     @staticmethod
-    def is_exists(orgnization_ID):
+    def is_exists(orgnization_ID:str)->Tuple[bool, dict]:
         """check if an organization exists in the database
         Args:
             orgnization_ID (string): the ID of the organization
@@ -67,7 +68,7 @@ class Organization():
         return org_ref.get().exists
 
     @staticmethod
-    def get_teams(orgnization_ID):
+    def get_teams(orgnization_ID:str)->list[dict]:
         """get the teams of an organization from the database
 
         Args:
