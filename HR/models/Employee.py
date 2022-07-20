@@ -1,5 +1,7 @@
 # external imports
 import datetime
+from email.policy import HTTP
+from http import HTTPStatus
 from typing import Tuple
 from flask import abort
 from flask_restx import fields
@@ -121,25 +123,25 @@ class Employee:
         """
         date_dict = {}
         if not date.get('Day'):
-            abort(400, "Missing day")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Day is required'})
         if not date.get('Month'):
-            abort(400, "Missing month")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Month is required'})
         if not date.get('Year'):
-            abort(400, "Missing year")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year is required'})
         date_dict['Day'] = int(date.get('Day'))
         date_dict['Month'] = int(date.get('Month'))
         date_dict['Year'] = int(date.get('Year'))
         if date_dict['Year'] == 0:
-            abort(400, "Invalid year")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year cannot be 0'})
         if date_dict['Month'] < 1 or date_dict['Month'] > 12:
-            abort(400, "Invalid month")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Month must be between 1 and 12'})
         if date_dict['Day'] < 1 or date_dict['Day'] > 31:
-            abort(400, "Invalid day")
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Day must be between 1 and 31'})
         try:
             date = datetime.date(
                 date_dict['Year'], date_dict['Month'], date_dict['Day'])
         except ValueError as e:
-            abort(400, str(e.args[0]))
+            abort(HTTPStatus.BAD_REQUEST.value, str(e.args[0]))
         return date_dict
 
     @staticmethod
@@ -156,7 +158,7 @@ class Employee:
             return datetime.date(date_dict['Year'], date_dict['Month'], date_dict['Day']).isoformat()
 
         except ValueError as e:
-            abort(400, str(e.args[0]))
+            abort(HTTPStatus.BAD_REQUEST.value, {'error': str(e.args[0])})
 
     @staticmethod
     def is_attend(orgnization_ID: str, employee_ID: str, date: dict) -> Tuple[bool, dict]:

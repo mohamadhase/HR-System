@@ -5,7 +5,7 @@ from flask_restx import fields
 import hashlib
 from functools import wraps
 import jwt
-
+from http import HTTPStatus
 # internal imports
 from HR import db
 from HR import api
@@ -44,10 +44,10 @@ class Authentication:
         db.collection('Organization').document(
             org_info['UserName']).set(org_info)
 
-    def token_required(f:function)->function:
+    def token_required(f):
         """ decorator to check if the token is valid or not"""
         @wraps(f)
-        def decorated(*args, **kwargs)->function:
+        def decorated(*args, **kwargs):
             """ decorator to check if the token is valid or not 
 
             Returns:
@@ -59,7 +59,7 @@ class Authentication:
                 token = request.headers['x-acess-token']
             # if no token is found, abort with 401 Unauthorized
             if not token:
-                abort(401, 'Token is missing')
+                abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is missing'})
             try:
                 # try to decode the token
                 data = jwt.decode(
@@ -68,7 +68,7 @@ class Authentication:
                 current_user = data['UserName']
             except:
                 # if the token is invalid, abort with 401 Unauthorized
-                abort(401, 'Token is invalid')
+                abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is invalid'})
                 # return the function with the current_user as parameter if the token is valid
             return f(current_user, *args, **kwargs)
 
