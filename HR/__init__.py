@@ -1,12 +1,18 @@
 # external imports
+from pydoc import doc
 from flask import Flask
 from flask_restx import Api
 from firebase_admin import credentials, firestore, initialize_app
 from dotenv import load_dotenv
 from os import getenv
 
+import slack
+
+
 #Create a Flask application
 app = Flask(__name__)
+#connect to slack using the slack token
+client  = slack.WebClient(token=getenv('SLACK_APP_TOKEN'))
 #Delete the default Flask 404 error recomindation
 app.config['ERROR_404_HELP'] = False
 #Load the .env file
@@ -29,9 +35,14 @@ from HR.apis.employee import api as employee_api
 from HR.apis.employee_attendance import api as employee_attendance_api
 from HR.apis.team import api as team_api
 from HR.apis.authenticatoion import api as authentication_api
+<<<<<<< HEAD
 #Register the namespaces for the swagger UI
+=======
+from HR.apis.bot import api as bot_api
+>>>>>>> slackBot
 api.add_namespace(organization_api, path='/organization')
 api.add_namespace(employee_api, path='/employee')
 api.add_namespace(employee_attendance_api, path='/employee')
 api.add_namespace(team_api, path='/team')
 api.add_namespace(authentication_api, path='/authentication')
+api.add_namespace(bot_api, path='/bot')

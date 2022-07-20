@@ -214,3 +214,12 @@ class Employee:
         attend_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         attend_ref.delete()
+    @staticmethod 
+    def get_all_employees(orgnization_ID):
+        employees_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Employees').stream()
+        employess = []
+        for employee in employees_ref:
+            employess.append(employee.to_dict())
+        return employess
+
