@@ -57,7 +57,7 @@ class Organization():
         return org_ref.get().to_dict()
 
     @staticmethod
-    def is_exists(orgnization_ID:str)->Tuple[bool, dict]:
+    def is_exists(orgnization_ID:str)->bool:
         """check if an organization exists in the database
         Args:
             orgnization_ID (string): the ID of the organization

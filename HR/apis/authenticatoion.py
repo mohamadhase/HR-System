@@ -13,6 +13,8 @@ api = Namespace('Authenticatoion', description='Authenticatoion related APIs')
 class LogIn(Resource):
     @api.doc('Login')
     @api.expect(Authentication.login_orgnization, validate=True)
+    @api.response(200, 'Success')
+    @api.response(401, 'Unauthorized')
     def post(self):
         #get the cridintials from the request
         cridintials = api.payload
@@ -26,7 +28,8 @@ class LogIn(Resource):
         if org_info['Password'] != cridintials['Password']:
             abort(401, 'Login Failed')
         #create a token for the user
-        token = jwt.encode({'UserName': org_info['UserName'],'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        token =  Authentication.generate_token(org_info['UserName']), 200
+        #return the token
         return token
         
 
