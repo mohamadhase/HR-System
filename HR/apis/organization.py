@@ -1,6 +1,8 @@
 # external imports
 from flask_restx import Namespace, Resource
 from flask import abort, request
+from http import HTTPStatus 
+
 # internal imports
 from HR import db
 from HR.models.Organization import Organization
@@ -14,12 +16,12 @@ api = Namespace('Organization', description='Organization related API')
 @api.route('/info')
 class OrganizationInfo(Resource):
     @api.doc(description='Get inforamtion about the  Organization', security='apikey')
-    @api.response(200, 'success request', Organization.Organization_info)
-    @api.response(400, 'invalid arguments')
-    @api.response(404, 'Organization not found')
+    @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase , Organization.Organization_info)
+    @api.response(HTTPStatus.BAD_REQUEST.value, HTTPStatus.BAD_REQUEST.phrase)
+    @api.response(HTTPStatus.NOT_FOUND.value, HTTPStatus.NOT_FOUND.phrase)
+    @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
     @api.param('teams', 'spicify if you want to get teams or not', type=int, default=0)
     @api.param('employees', 'spicify if you want to get employees or not', type=int, default=0)
-    @api.response(401, 'Unauthorized')
     @Authentication.token_required
     def get(orgnization_ID, self):
         # get the arguments
@@ -27,38 +29,38 @@ class OrganizationInfo(Resource):
         employees = request.args.get('employees')
         # check if the orgnization exists
         if not Organization.is_exists(orgnization_ID):
-            abort(404, 'Organization not found')
+            abort(HTTPStatus.NOT_FOUND.value, {'error':'Organization not found'})
         # validate the teams and employees arguments
         try:
             teams = int(teams)
             if teams not in [0, 1]:
                 raise ValueError
         except ValueError:
-            abort(400, f'Invalid argument teams -> {teams}')
+            abort(HTTPStatus.BAD_REQUEST.value, {'error':'teams argument must be 0 or 1'})
         try:
             employees = int(employees)
             if employees not in [0, 1]:
                 raise ValueError
         except ValueError as e:
-            abort(400, f'Invalid argument employees -> {employees}')
+            abort(HTTPStatus.BAD_REQUEST.value, {'error':'employees argument must be 0 or 1'})
         # get the organization information
         org_info = Organization.get_info(orgnization_ID, teams, employees)
         # delete the password from the returned object
         org_info.pop('Password')
         # return the organization information with success status
-        return org_info, 200
+        return org_info, HTTPStatus.OK.value
 
     @api.doc(description='Update the Organization informations', security='apikey')
     @api.param('Name', 'New Organization Name')
     @api.param('Address', 'New Adress Description')
-    @api.response(200, 'Organization updated', Organization.Organization_info)
-    @api.response(404, 'Organization not found')
-    @api.response(401, 'Unauthorized')
+    @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase , Organization.Organization_info)
+    @api.response(HTTPStatus.NOT_FOUND.value, HTTPStatus.NOT_FOUND.phrase)
+    @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
     @Authentication.token_required
     def patch(orgnization_ID, self):
         # check if the orgnization exists
         if not Organization.is_exists(orgnization_ID):
-            abort(404, 'Organization Not Found')
+            abort(HTTPStatus.NOT_FOUND.value, {'error':'Organization not found'})
         # get current Organization info
         orgnization_info = Organization.get_info(orgnization_ID)
         # get the new Organization info
@@ -73,4 +75,4 @@ class OrganizationInfo(Resource):
         # delete the password from the returned object
         org_info.pop('Password')
         # return the organization information with success status
-        return org_info, 200
+        return org_info, HTTPStatus.OK.value
