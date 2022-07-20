@@ -121,7 +121,7 @@ class TeamEmployee(Resource):
         if not validate_employee:
             abort(HTTPStatus.NOT_FOUND, 'Employee not found')
         # check if employee is already in the team
-        if Employee.in_team(organization_id, employee_id):
+        if Employee.is_in_team(organization_id, employee_id):
             abort(HTTPStatus.CONFLICT, 'Employee is already in the team')
         # add employee to the team
         Employee.add_to_team(organization_id, employee_id, team_name)
