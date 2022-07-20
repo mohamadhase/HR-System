@@ -6,13 +6,12 @@ from firebase_admin import credentials, firestore, initialize_app
 from dotenv import load_dotenv
 from os import getenv
 
-import slack
-
+from slack import WebClient
 
 #Create a Flask application
 app = Flask(__name__)
 #connect to slack using the slack token
-client  = slack.WebClient(token=getenv('SLACK_APP_TOKEN'))
+client  = WebClient(token=getenv('SLACK_APP_TOKEN'))
 #Delete the default Flask 404 error recomindation
 app.config['ERROR_404_HELP'] = False
 #Load the .env file
