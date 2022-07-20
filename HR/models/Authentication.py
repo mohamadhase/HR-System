@@ -5,7 +5,6 @@ from flask_restx import fields
 import hashlib
 from functools import wraps
 import jwt
-
 # internal imports
 from HR import db
 from HR import api
@@ -44,10 +43,10 @@ class Authentication:
         db.collection('Organization').document(
             org_info['UserName']).set(org_info)
 
-    def token_required(f:function)->function:
+    def token_required(f):
         """ decorator to check if the token is valid or not"""
         @wraps(f)
-        def decorated(*args, **kwargs)->function:
+        def decorated(*args, **kwargs):
             """ decorator to check if the token is valid or not 
 
             Returns:
