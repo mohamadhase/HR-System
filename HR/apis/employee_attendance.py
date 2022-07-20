@@ -12,7 +12,7 @@ api = Namespace('Employee Attendance',
 
 @api.route('/<string:employee_id>/attendance')
 class EmployeeAttendance(Resource):
-    @api.doc(description="Get Spisific  employee attendance",security='apikey')
+    @api.doc(description="Get Spisific  employee attendance", security='apikey')
     @api.param('Day', 'Day of the month')
     @api.param('Month', 'Month of the year')
     @api.param('Year', 'Year')
@@ -21,7 +21,7 @@ class EmployeeAttendance(Resource):
     @api.response(400, 'Bad Date')
     @api.response(401, 'Unauthorized')
     @Authentication.token_required
-    def get(organization_id,self, employee_id):
+    def get(organization_id, self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -35,7 +35,7 @@ class EmployeeAttendance(Resource):
             abort(404, "Attendance not found")
         return attend_info, 200
 
-    @api.doc(description="Update employee attendance",security='apikey')
+    @api.doc(description="Update employee attendance", security='apikey')
     @api.param('Day', 'Day of the month', required=True)
     @api.param('Month', 'Month of the year', required=True)
     @api.param('Year', 'Year', required=True)
@@ -44,9 +44,8 @@ class EmployeeAttendance(Resource):
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date or Bad Number of Hours')
     @api.response(401, 'Unauthorized')
-
     @Authentication.token_required
-    def patch(organization_id,self, employee_id):
+    def patch(organization_id, self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -71,7 +70,7 @@ class EmployeeAttendance(Resource):
         Employee.update_attend(organization_id, employee_id, attend_date)
         return attend_date, 200
 
-    @api.doc(description="Delete employee attendance", params={'employee_id': 'Employee ID'},security='apikey')
+    @api.doc(description="Delete employee attendance", params={'employee_id': 'Employee ID'}, security='apikey')
     @api.param('Day', 'Day of the month', required=True)
     @api.param('Month', 'Month of the year', required=True)
     @api.param('Year', 'Year', required=True)
@@ -79,9 +78,8 @@ class EmployeeAttendance(Resource):
     @api.response(404, 'Employee not found or attendance not found')
     @api.response(400, 'Bad Date')
     @api.response(401, 'Unauthorized')
-
     @Authentication.token_required
-    def delete(organization_id,self, employee_id):
+    def delete(organization_id, self, employee_id):
         # validate employee id
         if not Employee.is_exists(organization_id, employee_id)[0]:
             abort(404, "Employee not found")
@@ -97,16 +95,15 @@ class EmployeeAttendance(Resource):
         Employee.delete_attend(organization_id, employee_id, attend_date)
         return 'Attend deleted', 200
 
-    @api.doc(description="Add employee attendance",security='apikey')
+    @api.doc(description="Add employee attendance", security='apikey')
     @api.expect(Employee.attend_info, validate=True)
     @api.response(200, 'Attendance added', Employee.attend_info)
     @api.response(404, 'Employee not found')
     @api.response(400, 'Bad Date Or Bad Number of Hours')
     @api.response(409, 'Attendance already exists')
     @api.response(401, 'Unauthorized')
-    
     @Authentication.token_required
-    def post(organization_id,self, employee_id):
+    def post(organization_id, self, employee_id):
         # get attendance info
         attend_info = api.payload
         # validate employee id
