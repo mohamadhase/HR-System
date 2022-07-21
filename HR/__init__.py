@@ -39,11 +39,12 @@ from HR.apis.employee_attendance import api as employee_attendance_api
 from HR.apis.team import api as team_api
 from HR.apis.authenticatoion import api as authentication_api
 import HR.models.Bot
-import HR.apis.bot 
+from HR.apis.bot import api  as bot_api
 #Register the namespaces for the swagger UI
 api.add_namespace(organization_api, path='/organization')
 api.add_namespace(employee_api, path='/employee')
 api.add_namespace(employee_attendance_api, path='/employee')
 api.add_namespace(team_api, path='/team')
 api.add_namespace(authentication_api, path='/authentication')
+api.add_namespace(bot_api, path='/bot')
 

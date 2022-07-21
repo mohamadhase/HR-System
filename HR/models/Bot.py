@@ -21,7 +21,8 @@ class Bot:
         emp_ref = org_ref[0].reference.collection('Employees').where('Email', '==', employee_email).get()
         
         # if the employee is in the database return True and the employee info else return False and None
-        return (emp_ref.exists(),emp_ref.to_dict())
+        print((emp_ref[0].exists,emp_ref[0].to_dict()))
+        return (emp_ref[0].exists,emp_ref[0].to_dict())
 
 
     def get_org_id(org_slack_id:str) -> str:
@@ -48,4 +49,7 @@ class Bot:
             str: the employee id
         """
         emp_ref = db.collection('Organization').document(org_id).collection('Employees').where('Email', '==', email).get()
-        return emp_ref[0].id
+        try :
+            return emp_ref[0].id
+        except IndexError:
+            return None
