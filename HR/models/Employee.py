@@ -18,6 +18,7 @@ class Employee:
         "Phone": fields.String(required=True, description="Employee Phone"),
         "Addres": fields.String(required=True, description="Employee Address"),
         "TeamID": fields.String(required=False, description="Employee TeamID"),
+        "SlackID": fields.String(required=False, description="Employee SlackID")
     }, strict=True)
     attend_info = api.model('Employee Attendance', {
         "Day": fields.Integer(required=True, description="Attendance Day"),

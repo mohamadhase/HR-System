@@ -16,7 +16,8 @@ from HR.models.Organization import Organization
 class Authentication:
     register_orgnization = api.inherit('Register Organization', Organization.Organization_info, {
         'UserName': fields.String(required=True, description="Organization User Name"),
-        'Password': fields.String(required=True, description="Organization Password")
+        'Password': fields.String(required=True, description="Organization Password"),
+        
     })
     login_orgnization = api.model('Login Organization', {
         'UserName': fields.String(required=True, description="Organization User Name"),

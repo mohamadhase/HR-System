@@ -53,6 +53,7 @@ class OrganizationInfo(Resource):
     @api.doc(description='Update the Organization informations', security='apikey')
     @api.param('Name', 'New Organization Name')
     @api.param('Address', 'New Adress Description')
+    @api.param('SlackID', 'New slack id')
     @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase , Organization.Organization_info)
     @api.response(HTTPStatus.NOT_FOUND.value, HTTPStatus.NOT_FOUND.phrase)
     @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
@@ -69,6 +70,9 @@ class OrganizationInfo(Resource):
 
         if request.args.get("Address"):
             orgnization_info['Address'] = request.args.get("Address")
+        
+        if request.args.get("SlackID"):
+            orgnization_info['SlackID'] = request.args.get("SlackID")
         # update the Organization info in the database
         
         org_info = Organization.update(orgnization_ID, orgnization_info)

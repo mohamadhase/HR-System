@@ -36,6 +36,7 @@ class EmployeeInfo(Resource):
     @api.param('employee_phone', 'Employee Phone')
     @api.param('employee_address', 'Employee Address')
     @api.param('employee_team_id', 'Employee TeamID')
+    @api.param('slack_id', 'Employee SlackID')
     @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase, Employee.employee_info)
     @api.response(HTTPStatus.NOT_FOUND.value, HTTPStatus.NOT_FOUND.phrase)
     @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
@@ -55,6 +56,8 @@ class EmployeeInfo(Resource):
             employee_info['Phone'] = request.args.get('employee_phone')
         if request.args.get('employee_address'):
             employee_info['Address'] = request.args.get('employee_address')
+        if request.args.get('slack_id'):
+            employee_info['SlackID'] = request.args.get('slack_id')
         if request.args.get('employee_team_id'):
             # check if the team is exists
             if Team.is_exists(organization_id, request.args.get('employee_team_id'))[0]:

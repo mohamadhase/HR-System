@@ -12,6 +12,7 @@ class Organization():
         "Name": fields.String(required=True, description="Organization Name"),
         "Address": fields.String(required=True, description="Organization Address"),
         "UserName": fields.String(required=True, description="Organization UserName"),
+        'SlackID':  fields.String(required=True, description="Organization Slack ID")
     })
 
     @staticmethod
