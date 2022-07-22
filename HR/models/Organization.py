@@ -4,8 +4,8 @@ from flask_restx import fields
 # internal imports
 from HR import db
 from HR import api
-
-
+from HR.models.Logger import *
+logger = create_logger(__name__)
 class Organization():
     # Organization model for the returned data
     Organization_info = api.model('Organization_info',  {
@@ -16,6 +16,7 @@ class Organization():
 
     @staticmethod
     def get_info(orgnization_ID:str, teams=False, employees=False)->dict:
+        logger.info(f'getting organization {orgnization_ID} information')
         """get the information of an organization from the database 
 
         Args:
@@ -39,6 +40,7 @@ class Organization():
             orgnization_employees = [employee.to_dict()
                                      for employee in orgnization_employees_ref]
             orgnization_info['Employees'] = orgnization_employees
+        logger.info(f'organization {orgnization_ID} information retrieved successfully')
         return orgnization_info
 
     @staticmethod
@@ -52,8 +54,10 @@ class Organization():
         Returns:
             dict:the updated organization information
         """
+        logger.info(f'updating organization {orgnization_ID} information')
         org_ref = db.collection('Organization').document(orgnization_ID)
         org_ref.update(orgnization_info)
+        logger.info(f'organization {orgnization_ID} information updated successfully')
         return org_ref.get().to_dict()
 
     @staticmethod
@@ -64,6 +68,7 @@ class Organization():
         Returns:
             bool: True if the organization exists, False otherwise
         """
+        logger.info(f'checking if organization {orgnization_ID} exists')
         org_ref = db.collection('Organization').document(orgnization_ID)
         return org_ref.get().exists
 
@@ -77,7 +82,9 @@ class Organization():
         Returns:
             List(dict): List of the teams of the organization
         """
+        logger.info(f'getting organization {orgnization_ID} teams')
         teams_ref = db.collection('Organization').document(
             orgnization_ID).collection('Teams').stream()
         teams = [team.to_dict() for team in teams_ref]
+        logger.info(f'organization {orgnization_ID} teams retrieved successfully')
         return teams

@@ -8,8 +8,8 @@ from flask_restx import fields
 # internal imports
 from HR import db
 from HR import api
-
-
+from HR.models.Logger import create_logger
+logger = create_logger(__name__)
 class Employee:
     employee_info = api.model('Employee', {
         "ID": fields.String(required=True, description="Employee ID"),
@@ -28,6 +28,7 @@ class Employee:
 
     @staticmethod
     def is_exists(orgnization_ID: str, employee_ID: str) -> Tuple[bool, dict]:
+        logger.info(f'Checking if Employee {employee_ID} exists')
         """check if employee is exists
 
         Args:
@@ -52,6 +53,7 @@ class Employee:
         Returns:
             bool: true if employee is in team | false if not
         """
+        logger.info(f'Checking if Employee {employee_ID} is in team')
         try:
             team_id = db.collection('Organization').document(
                 orgnization_ID).collection('Employees').document(employee_ID).get().to_dict()['TeamID']
@@ -69,8 +71,10 @@ class Employee:
             employee_ID (str): employee ID to be added to team
             team_ID (str): team ID to be added to employee
         """
+        logger.info(f'Adding Employee {employee_ID} to team {team_ID}')
         db.collection('Organization').document(orgnization_ID).collection(
             'Employees').document(employee_ID).update({'TeamID': team_ID})
+        logger.info(f'Employee {employee_ID} added to team {team_ID}')
 
     @staticmethod
     def update(orgnization_ID: str, employee_ID: str, employee_info: dict) -> None:
@@ -81,8 +85,10 @@ class Employee:
             employee_ID (str): employee ID to be updated
             employee_info (dict): employee info to be updated
         """
+        logger.info(f'Updating Employee {employee_ID}')
         db.collection('Organization').document(orgnization_ID).collection(
             'Employees').document(employee_ID).update(employee_info)
+        logger.info(f'Employee {employee_ID} updated')
 
     @staticmethod
     def delete(orgnization_ID: str, employee_ID: str) -> None:
@@ -92,8 +98,10 @@ class Employee:
             orgnization_ID (str): organization ID the employee belongs to
             employee_ID (str): employee ID to be deleted
         """
+        logger.info(f'Deleting Employee {employee_ID}')
         db.collection('Organization').document(orgnization_ID).collection(
             'Employees').document(employee_ID).delete()
+        logger.info(f'Employee {employee_ID} deleted')
 
     @staticmethod
     def create(orgnization_ID: str, employee_info: dict) -> dict:
@@ -106,9 +114,11 @@ class Employee:
         Returns:
             dict: employee info created in database
         """
+        logger.info(f'Creating new Employee')
         employee_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_info['ID'])
         employee_ref.set(employee_info)
+        logger.info(f'Employee {employee_info["ID"]} created')
         return employee_ref.get().to_dict()
 
     @staticmethod
@@ -121,26 +131,34 @@ class Employee:
         Returns:
             dict: validated date
         """
+        logger.info(f'Validate date {date}')
         date_dict = {}
         if not date.get('Day'):
+            logger.error(f'Day is not provided Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Day is required'})
         if not date.get('Month'):
+            logger.error(f'Month is not provided Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Month is required'})
         if not date.get('Year'):
+            logger.error(f'Year is not provided Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year is required'})
         date_dict['Day'] = int(date.get('Day'))
         date_dict['Month'] = int(date.get('Month'))
         date_dict['Year'] = int(date.get('Year'))
         if date_dict['Year'] == 0:
+            logger.error(f'Year cannot be 0 Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year cannot be 0'})
         if date_dict['Month'] < 1 or date_dict['Month'] > 12:
+            logger.error(f'Month must be between 1 and 12 Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Month must be between 1 and 12'})
         if date_dict['Day'] < 1 or date_dict['Day'] > 31:
+            logger.error(f'Day must be between 1 and 31 Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Day must be between 1 and 31'})
         try:
             date = datetime.date(
                 date_dict['Year'], date_dict['Month'], date_dict['Day'])
         except ValueError as e:
+            logger.exception(f'Invalid Date {e} Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, str(e.args[0]))
         return date_dict
 
@@ -154,10 +172,12 @@ class Employee:
         Returns:
             str: datetime string in format YYYY-MM-DD
         """
+        logger.info(f'Converting date {date_dict} to datetime string')
         try:
             return datetime.date(date_dict['Year'], date_dict['Month'], date_dict['Day']).isoformat()
 
         except ValueError as e:
+            logger.exception(f'Invalid Date {e} Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': str(e.args[0])})
 
     @staticmethod
@@ -172,6 +192,7 @@ class Employee:
         Returns:
             Tuple[bool,dict]: (true if employee is attendance on given date | false if not, attendance info)
         """
+        logger.info(f'Checking if employee {employee_ID} is attendance on {date}')
         attend_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         return attend_ref.get().exists, attend_ref.get().to_dict()
@@ -185,9 +206,11 @@ class Employee:
             employee_ID (str): employee ID to be added attendance
             date (dict): date to be added attendance
         """
+        logger.info(f'Adding attendance on {date["Date"]} for employee {employee_ID}')
         attend_day_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         attend_day_ref.set(date)
+        logger.info(f'Attendance on {date["Date"]} for employee {employee_ID} added')
 
     @staticmethod
     def update_attend(orgnization_ID: str, employee_ID: str, date: dict) -> None:
@@ -198,9 +221,11 @@ class Employee:
             employee_ID (str): employee ID to be updated attendance
             date (dict): date to be updated attendance
         """
+        logger.info(f'Updating attendance on {date["Date"]} for employee {employee_ID}')
         attend_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         attend_ref.update(date)
+        logger.info(f'Attendance on {date["Date"]} for employee {employee_ID} updated')
 
     @staticmethod
     def delete_attend(orgnization_ID: str, employee_ID: str, date: dict) -> None:
@@ -211,6 +236,8 @@ class Employee:
             employee_ID (str): employee ID to be deleted attendance
             date (dict): date to be deleted attendance
         """
+        logger.info(f'Deleting attendance on {date["Date"]} for employee {employee_ID}')
         attend_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         attend_ref.delete()
+        logger.info(f'Attendance on {date["Date"]} for employee {employee_ID} deleted')
