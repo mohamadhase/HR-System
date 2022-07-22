@@ -7,7 +7,6 @@ class Bot:
     """Class for all the bot related functions"""
     def is_the_Employee_exists(employee_email: str,org_slack_id:str) -> Tuple[bool,dict]:
         """check if the employee is already in the database using the email
-
         Args:
             employee_email (str): the employee email 
             org_slack_id (str): the organization slack id to search in
@@ -21,7 +20,6 @@ class Bot:
         emp_ref = org_ref[0].reference.collection('Employees').where('Email', '==', employee_email).get()
         
         # if the employee is in the database return True and the employee info else return False and None
-        print((emp_ref[0].exists,emp_ref[0].to_dict()))
         return (emp_ref[0].exists,emp_ref[0].to_dict())
 
 
