@@ -1,0 +1,17 @@
+2022-07-22 21:44:54,749 - HR - INFO - Flask application created
+2022-07-22 21:44:54,755 - HR - INFO - Firebase credintials initialized
+2022-07-22 21:44:54,755 - HR - INFO - Firebase app initialized
+2022-07-22 21:44:54,755 - HR - INFO - Firestore database connected
+2022-07-22 21:44:54,777 - HR - INFO - Organization API registered
+2022-07-22 21:44:54,778 - HR - INFO - Employee API registered
+2022-07-22 21:44:54,779 - HR - INFO - Employee Attendance API registered
+2022-07-22 21:44:54,781 - HR - INFO - Team API registered
+2022-07-22 21:44:54,782 - HR - INFO - Authentication API registered
+2022-07-22 21:45:12,591 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-07-22 21:45:12,591 - models.Authentication - INFO - Try to decode the token
+2022-07-22 21:45:12,591 - models.Authentication - INFO - Token is valid
+2022-07-22 21:45:12,591 - apis.organization - INFO - GET /organization/info
+2022-07-22 21:45:12,591 - models.Organization - INFO - checking if organization string exists
+2022-07-22 21:45:13,252 - models.Organization - INFO - getting organization string information
+2022-07-22 21:45:13,382 - models.Organization - INFO - organization string information retrieved successfully
+2022-07-22 21:45:13,382 - apis.organization - INFO - Request completed successfully returning HTTP status code:200
