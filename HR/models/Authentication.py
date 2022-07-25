@@ -37,7 +37,7 @@ class Authentication:
         hash_pass = hashlib.sha256(password.encode()).hexdigest()
         logger.info('password encrypted successfully')
         return hash_pass
-
+    @staticmethod
     def register(org_info: dict) -> None:
         """ registers the Organization in the database
 
@@ -76,12 +76,10 @@ class Authentication:
                 # get the user name from the token if it is valid
                 current_user = data['UserName']
                 logger.info('Token is valid')
-            except:
-                
+            except Exception:
                 # if the token is invalid, abort with 401 Unauthorized
                 logger.error(f'request {request.path} contains an invalid token returning {HTTPStatus.UNAUTHORIZED}')
                 abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is invalid'})
-                # return the function with the current_user as parameter if the token is valid
             return f(current_user, *args, **kwargs)
 
         return decorated
@@ -97,8 +95,7 @@ class Authentication:
             str: token containing the user name and expiry time in sha256 algorithm
         """
         logger.info('Generating token')
-        token = jwt.encode({'UserName': user_name, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        token = jwt.encode({'UserName': user_name, 'exp': (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30))}, app.config['SECRET_KEY'])
         logger.info('Token generated successfully')
         return token
         

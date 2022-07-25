@@ -60,7 +60,7 @@ class Employee:
         except KeyError:
             return False
 
-        return team_id != '' and team_id != None
+        return team_id not in ['', None]
 
     @staticmethod
     def add_to_team(orgnization_ID: str, employee_ID: str, team_ID: str) -> None:
@@ -114,7 +114,7 @@ class Employee:
         Returns:
             dict: employee info created in database
         """
-        logger.info(f'Creating new Employee')
+        logger.info('Creating new Employee')
         employee_ref = db.collection('Organization').document(
             orgnization_ID).collection('Employees').document(employee_info['ID'])
         employee_ref.set(employee_info)
@@ -132,7 +132,6 @@ class Employee:
             dict: validated date
         """
         logger.info(f'Validate date {date}')
-        date_dict = {}
         if not date.get('Day'):
             logger.error(f'Day is not provided Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Day is required'})
@@ -142,9 +141,8 @@ class Employee:
         if not date.get('Year'):
             logger.error(f'Year is not provided Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year is required'})
-        date_dict['Day'] = int(date.get('Day'))
-        date_dict['Month'] = int(date.get('Month'))
-        date_dict['Year'] = int(date.get('Year'))
+        date_dict = {'Day': int(date.get('Day')), 'Month': int(date.get('Month')), 'Year': int(date.get('Year'))}
+
         if date_dict['Year'] == 0:
             logger.error(f'Year cannot be 0 Returning Error Code {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error': 'Year cannot be 0'})

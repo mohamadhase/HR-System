@@ -99,7 +99,7 @@ class Employees(Resource):
     @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
     @Authentication.token_required
     def post(organization_id, self):
-        logger.info(f'Post /eployee')
+        logger.info('Post /eployee')
         # get new employee information
         employee_info = api.payload
         # check if the employee is exists

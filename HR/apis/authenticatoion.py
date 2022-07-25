@@ -16,7 +16,7 @@ class LogIn(Resource):
     @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase)
     @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
     def post(self):
-        logger.info(f"POST /login")
+        logger.info("POST /login")
         
         #get the cridintials from the request
         cridintials = api.payload
@@ -46,7 +46,7 @@ class Register(Resource):
     @api.response(HTTPStatus.CONFLICT.value, HTTPStatus.CONFLICT.phrase)
     @api.response(HTTPStatus.BAD_REQUEST.value, HTTPStatus.BAD_REQUEST.phrase)
     def post(self):
-        logger.info(f"POST /register")
+        logger.info("POST /register")
         #get the new Organization info
         org_info  = api.payload
         #check user_name

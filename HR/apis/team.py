@@ -131,7 +131,7 @@ class TeamEmployee(Resource):
         # get employee ID
         employee_id = request.args.get("employee_id")
         # check employee id
-        if employee_id == None:
+        if employee_id is None:
             logger.error(f'No employee ID provided returning {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error':'employee_id is required'})
         # check if the team is exists
@@ -166,7 +166,7 @@ class TeamEmployee(Resource):
         # get employee ID
         employee_id = request.args.get("employee_id")
         # check employee id
-        if employee_id == None:
+        if employee_id is None:
             logger.error(f'No employee ID provided returning {HTTPStatus.BAD_REQUEST}')
             abort(HTTPStatus.BAD_REQUEST.value, {'error':'employee_id is required'})
         # check if the team is exists
