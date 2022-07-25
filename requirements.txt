@@ -4,4 +4,4 @@ flask_restx
 PyJWT
 python-dotenv
 slackclient
-gunicorn 
+gunicorn==19.9.0

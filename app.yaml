@@ -1,5 +1,5 @@
-runtime: python310
-env: standard
+runtime: python
+env: flex
 entrypoint: gunicorn -b :$PORT run:app
 
 runtime_config:

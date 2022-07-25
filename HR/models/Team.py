@@ -32,7 +32,7 @@ class Team:
         return team_ref.get().to_dict()
 
     @staticmethod
-    def is_exists(orgnization_ID:str, team_ID:str)-> Tuple[bool, dict]:
+    def is_exists(orgnization_ID:str, team_ID:str):
         """check if a team exists in the database
 
         Args:
@@ -67,7 +67,7 @@ class Team:
             'Teams').document(team_name).update(team_info)
 
     @staticmethod
-    def get_employees(orgnization_ID:str, team_name:str)->list[dict]:
+    def get_employees(orgnization_ID:str, team_name:str):
         """get all the employees in a team
         Args:
             orgnization_ID (string): the organization ID to which the team belongs

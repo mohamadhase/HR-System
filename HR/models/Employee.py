@@ -27,7 +27,7 @@ class Employee:
     }, strict=True)
 
     @staticmethod
-    def is_exists(orgnization_ID: str, employee_ID: str) -> Tuple[bool, dict]:
+    def is_exists(orgnization_ID: str, employee_ID: str) :
         """check if employee is exists
 
         Args:
@@ -161,7 +161,7 @@ class Employee:
             abort(HTTPStatus.BAD_REQUEST.value, {'error': str(e.args[0])})
 
     @staticmethod
-    def is_attend(orgnization_ID: str, employee_ID: str, date: dict) -> Tuple[bool, dict]:
+    def is_attend(orgnization_ID: str, employee_ID: str, date: dict) :
         """ check if employee is attendance on given date
 
         Args:
