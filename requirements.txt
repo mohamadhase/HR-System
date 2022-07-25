@@ -1,0 +1,7 @@
+firebase_admin
+Flask
+flask_restx
+PyJWT
+python-dotenv
+slackclient
+gunicorn 
