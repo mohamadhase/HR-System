@@ -73,7 +73,7 @@ class Organization():
         return org_ref.get().exists
 
     @staticmethod
-    def get_teams(orgnization_ID:str)->list[dict]:
+    def get_teams(orgnization_ID:str):
         """get the teams of an organization from the database
 
         Args:
