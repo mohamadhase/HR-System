@@ -5,4 +5,5 @@ PyJWT
 python-dotenv
 slackclient
 gunicorn==19.9.0
+slackeventsapi
 # Werkzeug==2.1.2
