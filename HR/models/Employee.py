@@ -27,7 +27,7 @@ class Employee:
     }, strict=True)
 
     @staticmethod
-    def is_exists(orgnization_ID: str, employee_ID: str) -> Tuple[bool, dict]:
+    def is_exists(orgnization_ID: str, employee_ID: str):
         logger.info(f'Checking if Employee {employee_ID} exists')
         """check if employee is exists
 
@@ -179,7 +179,7 @@ class Employee:
             abort(HTTPStatus.BAD_REQUEST.value, {'error': str(e.args[0])})
 
     @staticmethod
-    def is_attend(orgnization_ID: str, employee_ID: str, date: dict) -> Tuple[bool, dict]:
+    def is_attend(orgnization_ID: str, employee_ID: str, date: dict) :
         """ check if employee is attendance on given date
 
         Args:
@@ -239,3 +239,19 @@ class Employee:
             orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').document(date['Date'])
         attend_ref.delete()
         logger.info(f'Attendance on {date["Date"]} for employee {employee_ID} deleted')
+    @staticmethod
+    def get_all_attends(orgnization_ID: str, employee_ID: str) -> list:
+        """ get all attendance for given employee from database
+
+        Args:
+            orgnization_ID (str): organization ID the employee belongs to
+            employee_ID (str): employee ID to be checked for attendance
+
+        Returns:
+            list: list of attendance info
+        """
+        logger.info(f'Getting all attendance for employee {employee_ID}')
+        attend_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Employees').document(employee_ID).collection('Attendance').stream()
+        attends = [attend.to_dict() for attend in attend_ref]
+        return attends

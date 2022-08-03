@@ -89,3 +89,4 @@ class OrganizationInfo(Resource):
         # return the organization information with success status
         logger.info(f'Request completed successfully returning HTTP status code:{HTTPStatus.OK.value}')
         return org_info, HTTPStatus.OK.value
+    

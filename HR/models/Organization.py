@@ -73,7 +73,7 @@ class Organization():
         return org_ref.get().exists
 
     @staticmethod
-    def get_teams(orgnization_ID:str)->list[dict]:
+    def get_teams(orgnization_ID:str):
         """get the teams of an organization from the database
 
         Args:
@@ -88,3 +88,25 @@ class Organization():
         teams = [team.to_dict() for team in teams_ref]
         logger.info(f'organization {orgnization_ID} teams retrieved successfully')
         return teams
+    def get_employees(orgnization_ID:str,team_ID:str=None):
+        """get the employees of an organization from the database 
+            if the team is given get the employees of the team
+
+        Args:
+            orgnization_ID (string): the ID of the organization to get from
+            team_ID (string): if its given get the employees of the team
+            
+
+        Returns:
+            List(dict): List of the employees of the organization or team
+        """
+        logger.info(f'getting organization {orgnization_ID} employees')
+        employees_ref = db.collection('Organization').document(
+            orgnization_ID).collection('Employees').stream()
+        if team_ID is None:
+            employees = [employee.to_dict() for employee in employees_ref]
+        else : 
+            employees = [employee.to_dict() for employee in employees_ref if employee.to_dict()['TeamID'] == team_ID]
+
+        logger.info(f'organization {orgnization_ID} employees retrieved successfully' )
+        return employees
