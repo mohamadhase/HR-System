@@ -1,0 +1,33 @@
+<div id="demo">
+  <h1>Teams Table </h1>
+  <h2>You Can Edit Add Delete View Teams from here</h2>
+  
+  <!-- Responsive table starts here -->
+  <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+  <div class="table-responsive-vertical shadow-z-1">
+  <!-- Table starts here -->
+  <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Team Name</th>
+          <th>Description</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-title="ID">String</td>
+          <td data-title="Name">Material Design Color Palette</td>
+
+          <!-- edit view delete options buttons  -->
+          <td data-title="Options">
+            <a class="btn text-warning " href="#"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn text-danger" href="#"><i class="fa fa-trash-o"></i> Delete</a>
+            <a class="btn text-info" href="#"><i class="fa fa-eye"></i> View</a>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+  

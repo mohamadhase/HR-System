@@ -5690,3 +5690,53 @@ ValueError: Invalid certificate argument: "None". Certificate argument must be a
 2022-08-03 15:53:19,584 - HR - INFO - Team API registered
 2022-08-03 15:53:19,585 - HR - INFO - Authentication API registered
 2022-08-03 15:53:19,593 - HR - INFO - Bot API registered
+2022-08-04 15:18:51,378 - HR - INFO - Flask application created
+2022-08-04 15:18:51,461 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:18:51,461 - HR - INFO - Firebase app initialized
+2022-08-04 15:18:51,462 - HR - INFO - Firestore database connected
+2022-08-04 15:18:51,582 - HR - INFO - Organization API registered
+2022-08-04 15:18:51,583 - HR - INFO - Employee API registered
+2022-08-04 15:18:51,584 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:18:51,586 - HR - INFO - Team API registered
+2022-08-04 15:18:51,588 - HR - INFO - Authentication API registered
+2022-08-04 15:18:51,593 - HR - INFO - Bot API registered
+2022-08-04 15:18:52,861 - HR - INFO - Flask application created
+2022-08-04 15:18:52,914 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:18:52,914 - HR - INFO - Firebase app initialized
+2022-08-04 15:18:52,914 - HR - INFO - Firestore database connected
+2022-08-04 15:18:52,956 - HR - INFO - Organization API registered
+2022-08-04 15:18:52,958 - HR - INFO - Employee API registered
+2022-08-04 15:18:52,959 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:18:52,961 - HR - INFO - Team API registered
+2022-08-04 15:18:52,963 - HR - INFO - Authentication API registered
+2022-08-04 15:18:52,968 - HR - INFO - Bot API registered
+2022-08-04 15:19:36,291 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:19:36,291 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
+2022-08-04 15:21:01,293 - HR - INFO - Flask application created
+2022-08-04 15:21:01,351 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:21:01,351 - HR - INFO - Firebase app initialized
+2022-08-04 15:21:01,351 - HR - INFO - Firestore database connected
+2022-08-04 15:21:01,410 - HR - INFO - Organization API registered
+2022-08-04 15:21:01,412 - HR - INFO - Employee API registered
+2022-08-04 15:21:01,413 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:21:01,416 - HR - INFO - Team API registered
+2022-08-04 15:21:01,418 - HR - INFO - Authentication API registered
+2022-08-04 15:21:01,426 - HR - INFO - Bot API registered
+2022-08-04 15:21:30,990 - HR - INFO - Flask application created
+2022-08-04 15:21:31,100 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:21:31,100 - HR - INFO - Firebase app initialized
+2022-08-04 15:21:31,100 - HR - INFO - Firestore database connected
+2022-08-04 15:21:31,158 - HR - INFO - Organization API registered
+2022-08-04 15:21:31,161 - HR - INFO - Employee API registered
+2022-08-04 15:21:31,162 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:21:31,166 - HR - INFO - Team API registered
+2022-08-04 15:21:31,168 - HR - INFO - Authentication API registered
+2022-08-04 15:21:31,177 - HR - INFO - Bot API registered
+2022-08-04 15:23:40,573 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:23:40,573 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
+2022-08-04 15:23:42,659 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:23:42,659 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
+2022-08-04 15:23:47,064 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:23:47,064 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
+2022-08-04 15:23:48,885 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:23:48,885 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
