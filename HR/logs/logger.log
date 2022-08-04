@@ -5740,3 +5740,31 @@ ValueError: Invalid certificate argument: "None". Certificate argument must be a
 2022-08-04 15:23:47,064 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
 2022-08-04 15:23:48,885 - models.Authentication - INFO - Checking the token for the request /organization/info
 2022-08-04 15:23:48,885 - models.Authentication - ERROR - request /organization/info does not contain a token returning 401
+2022-08-04 15:36:33,985 - HR - INFO - Flask application created
+2022-08-04 15:36:34,032 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:36:34,032 - HR - INFO - Firebase app initialized
+2022-08-04 15:36:34,032 - HR - INFO - Firestore database connected
+2022-08-04 15:36:34,089 - HR - INFO - Organization API registered
+2022-08-04 15:36:34,089 - HR - INFO - Employee API registered
+2022-08-04 15:36:34,089 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:36:34,089 - HR - INFO - Team API registered
+2022-08-04 15:36:34,089 - HR - INFO - Authentication API registered
+2022-08-04 15:36:34,105 - HR - INFO - Bot API registered
+2022-08-04 15:36:35,392 - HR - INFO - Flask application created
+2022-08-04 15:36:35,489 - HR - INFO - Firebase credintials initialized
+2022-08-04 15:36:35,490 - HR - INFO - Firebase app initialized
+2022-08-04 15:36:35,494 - HR - INFO - Firestore database connected
+2022-08-04 15:36:35,562 - HR - INFO - Organization API registered
+2022-08-04 15:36:35,564 - HR - INFO - Employee API registered
+2022-08-04 15:36:35,565 - HR - INFO - Employee Attendance API registered
+2022-08-04 15:36:35,571 - HR - INFO - Team API registered
+2022-08-04 15:36:35,572 - HR - INFO - Authentication API registered
+2022-08-04 15:36:35,579 - HR - INFO - Bot API registered
+2022-08-04 15:36:39,275 - models.Authentication - INFO - Checking the token for the request /organization/info
+2022-08-04 15:36:39,276 - models.Authentication - INFO - Try to decode the token
+2022-08-04 15:36:39,280 - models.Authentication - INFO - Token is valid
+2022-08-04 15:36:39,280 - apis.organization - INFO - GET /organization/info
+2022-08-04 15:36:39,280 - models.Organization - INFO - checking if organization string exists
+2022-08-04 15:36:40,466 - models.Organization - INFO - getting organization string information
+2022-08-04 15:36:40,591 - models.Organization - INFO - organization string information retrieved successfully
+2022-08-04 15:36:40,591 - apis.organization - INFO - Request completed successfully returning HTTP status code:200

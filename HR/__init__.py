@@ -7,13 +7,14 @@ from os import getenv
 import logging
 import slack
 from slackeventsapi import SlackEventAdapter 
-
+from flask_cors import CORS
 #internal imports
 from HR.models.Logger import *
 # create logger 
 logger = create_logger(__name__)
 #Create a Flask application
 app = Flask(__name__)
+CORS(app)
 logger.info('Flask application created')
 #Delete the default Flask 404 error recomindation
 app.config['ERROR_404_HELP'] = False
