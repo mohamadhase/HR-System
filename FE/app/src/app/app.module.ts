@@ -10,6 +10,8 @@ import { RegisterComponent } from './register/register.component';
 import { TeamsComponent } from './teams/teams.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TeamViewComponent } from './team-view/team-view.component';
+import { EmployeeViewComponent } from './employee-view/employee-view.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { HttpClientModule } from '@angular/common/http';
     LogInComponent,
     RegisterComponent,
     TeamsComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    TeamViewComponent,
+    EmployeeViewComponent
   ],
   imports: [
     BrowserModule,

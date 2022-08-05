@@ -1,0 +1,70 @@
+<div id="demo">
+    <h1>Team : {{teamName}}</h1>
+    <h2>You can view add or delete employees to the team</h2>
+    <button class="btn btn-success" (click)="getNoTeamEmployees()" ><a  href="team/{{teamName}}#open-modal-add">Add Team</a></button>
+  <div id="open-modal-add" class="modal-window">
+    <div>
+      <a href="team/{{teamName}}#" title="Close" class="modal-close">Close</a>
+      <br>
+        <p class="form-button"><small>New Team</small></p>
+        <div class="form-group ">
+          <label for="exampleInputEmail1">Name</label>
+          <select id="employeeSelector" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            <option selected value=''>Choose Team</option>
+            <option *ngFor="let employee of noTeamEmployees" value="{{employee.ID}}">{{employee.Name}}</option>
+
+          </select>
+
+          <small id="emailHelp" class="form-text text-muted"><b>Select Employee to be Added</b></small>
+        </div>
+
+
+        <div class="form-button">
+          <button (click)="addEmployeeToTeam()"  class="btn btn-primary" >Add</button>
+          
+        </div>
+    </div>
+  </div>
+    <!-- Responsive table starts here -->
+    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+    <div class="table-responsive-vertical shadow-z-1">
+    <!-- Table starts here -->
+    <table id="table" class="table table-hover table-mc-light-blue">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>HourPrice</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>SlackID</th>
+            <th>TeamID</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let employee of employees"  >
+            <td data-title="ID">{{employee.ID}}</td>
+            <td data-title="Name">{{employee.Name}}</td>
+            <td data-title="Email">{{employee.Email}}</td>
+            <td data-title="HourPrice">{{employee.HourPrice}}</td>
+            <td data-title="Address">{{employee.Address}}</td>
+            <td data-title="Phone">{{employee.Phone	}}</td>
+            <td data-title="SlackID">{{employee.SlackID}}</td>
+            <td data-title="TeamID">{{employee.TeamID}}</td>
+  
+            <!-- edit view delete options buttons  -->
+            <td data-title="Options">
+              <a class="btn text-danger" (click)="deleteEmployee(employee)" >Delete</a>
+            </td>
+
+        </tr>
+  
+        </tbody>
+      </table>
+    </div>
+    
+    
+  
+  

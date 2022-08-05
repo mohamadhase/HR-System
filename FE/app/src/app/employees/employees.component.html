@@ -1,1 +1,73 @@
-<p>employees works!</p>
+<div id="demo">
+    <h1>Employees Table </h1>
+    <h2>You Can Edit Add Delete View Employees from here</h2>
+    <button class="btn btn-success" ><a href="employees#open-modal-add">Add Team</a></button>
+    <div id="open-modal-add" class="modal-window">
+      <div>
+        <a href="employees#" title="Close" class="modal-close">Close</a>
+        <br>
+          <p class="form-button"><small>New Team</small></p>
+          <div class="form-group ">
+            <label for="exampleInputEmail1">Name</label>
+            <input type="text" class="form-control" id="teamName" aria-describedby="emailHelp" placeholder="Name">
+            <small id="emailHelp" class="form-text text-muted">Type Team Name <b>must be unique</b></small>
+          </div>
+          <div class="form-group ">
+            <label for="exampleInputEmail1">Description</label>
+            <input type="text" class="form-control" id="teamDescription" aria-describedby="emailHelp" placeholder="Description">
+            <small id="emailHelp" class="form-text text-muted">Type Team Description</small>
+          </div>
+          <p  id="Error" class="form-text  text-center p-3 " style="color:red;">Error</p>
+  
+          <div class="form-button">
+            <button  class="btn btn-primary" >Create</button>
+            
+          </div>
+      </div>
+    </div>
+    <!-- Responsive table starts here -->
+    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+    <div class="table-responsive-vertical shadow-z-1">
+    <!-- Table starts here -->
+    <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>HourPrice</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>SlackID</th>
+          <th>TeamID</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees"  >
+          <td data-title="ID">{{employee.ID}}</td>
+          <td data-title="Name">{{employee.Name}}</td>
+          <td data-title="Email">{{employee.Email}}</td>
+          <td data-title="HourPrice">{{employee.HourPrice}}</td>
+          <td data-title="Address">{{employee.Address}}</td>
+          <td data-title="Phone">{{employee.Phone	}}</td>
+          <td data-title="SlackID">{{employee.SlackID}}</td>
+          <td data-title="TeamID">{{employee.TeamID}}</td>
+
+          <!-- edit view delete options buttons  -->
+          <td data-title="Options">
+            <a class="btn text-warning"  ><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn text-danger"><i class="fa fa-trash-o"></i> Delete</a>
+            <a class="btn text-info"   ><i class="fa fa-eye"></i> View</a>
+
+          </td>
+
+      </tr>
+
+      </tbody>
+    </table>
+    </div>
+    
+    
+  
+  

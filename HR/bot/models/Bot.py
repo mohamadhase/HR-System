@@ -62,6 +62,7 @@ class Bot:
                                     , data=data, headers={'Authorization': 'Bearer ' + slack_token})
         # return the response
         return response.json()
+    
     def create_section(text:str)->dict:
         return {"type": "section","text": {"type": "mrkdwn","text": f"*{text}*"}}
     def create_divider():
