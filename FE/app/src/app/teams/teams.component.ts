@@ -2,16 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { Team } from 'src/models/Team';
 import { TeamService } from 'src/services/team.service';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from 'src/services/auth.service';
+import { Ng2SearchPipe } from 'ng2-search-filter';
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
+
+  searchText:any;
   Teams: Array<Team> = [];
-  constructor(private teamService: TeamService) { }
+  constructor(private teamService: TeamService,private auth:AuthService   ) { }
 
   ngOnInit(): void {
+    if (this.auth.validateToken()==false){
+      window.location.href = "/home";
+    }
     this.Teams = this.teamService.getTeams();
   }
   deleteTeam(team: Team): void {
@@ -40,7 +47,6 @@ export class TeamsComponent implements OnInit {
     let nameInput = document.getElementById('teamName') as HTMLInputElement;
     let descriptionInput = document.getElementById('teamDescription') as HTMLInputElement;
     let Error = document.getElementById('Error') as HTMLParagraphElement;
-    let code = 200;
     let team: Team = {} as Team;
     // check if the input is empty
     if (nameInput?.value == '' || descriptionInput?.value == '') {
@@ -54,6 +60,7 @@ export class TeamsComponent implements OnInit {
       this.teamService.newTeam(team).pipe(
         catchError(error => {
           Error.innerHTML = `the team ${team.Name} already exists`;
+          Error.style.color = 'red';
           return ([]);
         })
       ).subscribe(

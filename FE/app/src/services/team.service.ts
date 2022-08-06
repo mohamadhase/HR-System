@@ -27,6 +27,9 @@ export class TeamService {
       })
     return teams;
   }
+  getTeamsObservable(): Observable<any> {
+    return this.http.get(`${AppSettings.API_ENDPOINT}organization/info?employees=0&teams=1`, { headers: AppSettings.HEADER })
+  }
   deleteTeam(teamid: string): void {
 
     this.http.delete(`${AppSettings.API_ENDPOINT}}/team/${teamid}`, { headers: AppSettings.HEADER }).subscribe()
@@ -57,6 +60,9 @@ export class TeamService {
 
     })
     return employees;
+  }
+  getTeamEmployeesObservable(teamid: string): Observable<any> {
+    return this.http.get(`${AppSettings.API_ENDPOINT}team/${teamid}/employees`, { headers: AppSettings.HEADER })
   }
   removeEmployeeFromTeam(employeeid: string, teamid: string): void {
     this.http.delete(`${AppSettings.API_ENDPOINT}team/${teamid}/employees?employee_id=${employeeid}`, { headers: AppSettings.HEADER }).subscribe()

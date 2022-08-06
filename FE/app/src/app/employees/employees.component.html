@@ -1,33 +1,64 @@
 <div id="demo">
-    <h1>Employees Table </h1>
-    <h2>You Can Edit Add Delete View Employees from here</h2>
-    <button class="btn btn-success" ><a href="employees#open-modal-add">Add Team</a></button>
-    <div id="open-modal-add" class="modal-window">
-      <div>
-        <a href="employees#" title="Close" class="modal-close">Close</a>
-        <br>
-          <p class="form-button"><small>New Team</small></p>
-          <div class="form-group ">
-            <label for="exampleInputEmail1">Name</label>
-            <input type="text" class="form-control" id="teamName" aria-describedby="emailHelp" placeholder="Name">
-            <small id="emailHelp" class="form-text text-muted">Type Team Name <b>must be unique</b></small>
-          </div>
-          <div class="form-group ">
-            <label for="exampleInputEmail1">Description</label>
-            <input type="text" class="form-control" id="teamDescription" aria-describedby="emailHelp" placeholder="Description">
-            <small id="emailHelp" class="form-text text-muted">Type Team Description</small>
-          </div>
-          <p  id="Error" class="form-text  text-center p-3 " style="color:red;">Error</p>
-  
-          <div class="form-button">
-            <button  class="btn btn-primary" >Create</button>
-            
-          </div>
+  <h1>Employees Table </h1>
+  <h2>You Can Edit Add Delete View Employees from here</h2>
+  <button class="btn btn-success"><a href="employees#open-modal-add">Add Employee</a></button>
+  <input  [(ngModel)]="searchText"  class="fa fa-search form-control" type="text" name="search"autocomplete="off" placeholder=" &#61442;
+  Search for Employee"> 
+  <div id="open-modal-add" class="modal-window"  >
+    <div style="overflow:scroll; height:600px;">
+      <a href="employees#" title="Close" class="modal-close">Close</a>
+      <br>
+      <p class="form-button"><small>New Employee</small></p>
+      <div class="form-group ">
+        <label for="exampleInputEmail1">ID</label>
+        <input type="text" class="form-control" id="newID" aria-describedby="emailHelp" placeholder="ID">
+        <small id="emailHelp" class="form-text text-muted">Type Employee Name </small>
+      </div> 
+
+      <div class="form-group ">
+        <label for="exampleInputEmail1">Name</label>
+        <input type="text" class="form-control" id="newName" aria-describedby="emailHelp" placeholder="Name">
+        <small id="emailHelp" class="form-text text-muted">Type Employee Name </small>
+      </div> 
+
+      <div class="form-group ">
+        <label for="exampleInputEmail1">Email</label>
+        <input type="text" class="form-control" id="newEmail" aria-describedby="emailHelp" placeholder="Email">
+        <small id="emailHelp" class="form-text text-muted">Type Email  </small>
+      </div>                
+      <div class="form-group ">
+        <label for="exampleInputEmail1">Phone</label>
+        <input type="text" class="form-control" id="newPhone" aria-describedby="emailHelp" placeholder="Phone">
+        <small id="emailHelp" class="form-text text-muted">Type Employee Phone </small>
+      </div>                
+      <div class="form-group ">
+        <label for="exampleInputEmail1">Address</label>
+        <input type="text" class="form-control" id="newAddress" aria-describedby="emailHelp" placeholder="Adress">
+        <small id="emailHelp" class="form-text text-muted">Type Employee Address </small>
+      </div>
+
+      <div class="form-group ">
+        <label for="exampleInputEmail1">SlackID</label>
+        <input type="text" class="form-control" id="newSlack" aria-describedby="emailHelp" placeholder="HourPrice">
+        <small id="emailHelp" class="form-text text-muted">Type Employee HourPrice </small>
+      </div>
+      <div class="form-group ">
+        <label for="exampleInputEmail1">HourPrice</label>
+        <input type="text" class="form-control" id="newHour" aria-describedby="emailHelp" placeholder="HourPrice">
+        <small id="emailHelp" class="form-text text-muted">Type Employee HourPrice </small>
+      </div>
+
+      <p id="Error" class="form-text  text-center p-3 " style="color:red;"></p>
+
+      <div class="form-button">
+        <button (click)="createEmployee()" class="btn btn-primary">Create</button>
+
       </div>
     </div>
-    <!-- Responsive table starts here -->
-    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
-    <div class="table-responsive-vertical shadow-z-1">
+  </div>
+  <!-- Responsive table starts here -->
+  <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+  <div class="table-responsive-vertical shadow-z-1">
     <!-- Table starts here -->
     <table id="table" class="table table-hover table-mc-light-blue">
       <thead>
@@ -44,30 +75,90 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let employee of employees"  >
+        <tr *ngFor="let employee of employees| filter:searchText">
           <td data-title="ID">{{employee.ID}}</td>
           <td data-title="Name">{{employee.Name}}</td>
           <td data-title="Email">{{employee.Email}}</td>
           <td data-title="HourPrice">{{employee.HourPrice}}</td>
           <td data-title="Address">{{employee.Address}}</td>
-          <td data-title="Phone">{{employee.Phone	}}</td>
+          <td data-title="Phone">{{employee.Phone }}</td>
           <td data-title="SlackID">{{employee.SlackID}}</td>
-          <td data-title="TeamID">{{employee.TeamID}}</td>
+          <td data-title="TeamID">{{employee.TeamID!=''?employee.TeamID:'Not Assigned'}}</td>
 
           <!-- edit view delete options buttons  -->
           <td data-title="Options">
-            <a class="btn text-warning"  ><i class="fa fa-pencil"></i> Edit</a>
-            <a class="btn text-danger"><i class="fa fa-trash-o"></i> Delete</a>
-            <a class="btn text-info"   ><i class="fa fa-eye"></i> View</a>
+            <a href="employees#open-modal-update{{employee.ID}}" class="btn text-warning"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn text-danger" (click)="deleteEmployee(employee.ID)"><i class="fa fa-trash-o"></i> Delete</a>
+            <a class="btn text-info" (click)="getSlackInfo(employee.SlackID)" href="employees#open-modal-view{{employee.ID}}" ><i class="fa fa-eye"></i> View</a>
+            <div  id="open-modal-view{{employee.ID}}" class="modal-window"  >
+              <div style="overflow:scroll">
+                <a href="employees#" title="Close" class="modal-close">Close</a>
+                <br>
+                  <h3 style="text-align:center;margin: 20px 0px 10px 0px;color:#333;font-size: 18px;" *ngIf="employeeSlack">Slack Info</h3>    
 
+                            <div style="display: flex;justify-content:center;">
+                  <div class="a-box">
+                      <div class="img-container">
+                        <div class="img-inner">
+                          <div class="inner-skew">
+                            <img *ngIf="employeeSlack" id="slackimg" src="{{employeeSlack['profile']['image_1024']}}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-container">
+                        <h3 *ngIf="employeeSlack">{{employeeSlack['real_name']}}</h3>
+                        <small *ngIf="employeeSlack" >ID:{{employeeSlack['id']}}</small>
+                        <br>
+                        <small *ngIf="employeeSlack" >Is admin:{{employeeSlack['is_admin']=='false'?'Yes':'No'}}</small>
+
+                    </div>
+              
+              </div>
+                </div>
+            </div>
+            </div>
+            <div id="open-modal-update{{employee.ID}}" class="modal-window">
+              <div>
+                <a href="employees#" title="Close" class="modal-close">Close</a>
+                <br>
+                <p class="form-button"><small>Update {{employee.Name}}</small></p>
+                <div class="form-group ">
+                  <label for="exampleInputEmail1">Name</label>
+                  <input type="text" class="form-control" id="empName" aria-describedby="emailHelp" value="{{employee.Name}}">
+                  <small id="emailHelp" class="form-text text-muted">Type Employee Name </small>
+                </div> 
+
+                <div class="form-group ">
+                  <label for="exampleInputEmail1">Email</label>
+                  <input type="text" class="form-control" id="empEmail" aria-describedby="emailHelp" value="{{employee.Email}}">
+                  <small id="emailHelp" class="form-text text-muted">Type Email  </small>
+                </div>                
+                <div class="form-group ">
+                  <label for="exampleInputEmail1">Phone</label>
+                  <input type="text" class="form-control" id="empPhone" aria-describedby="emailHelp" value="{{employee.Phone}}">
+                  <small id="emailHelp" class="form-text text-muted">Type Employee Phone </small>
+                </div>                
+                <div class="form-group ">
+                  <label for="exampleInputEmail1">Address</label>
+                  <input type="text" class="form-control" id="empAddress" aria-describedby="emailHelp" value="{{employee.Address}}">
+                  <small id="emailHelp" class="form-text text-muted">Type Employee Address </small>
+                </div>
+ 
+
+                <div class="form-button">
+                  <button (click)="updateEmployee(employee.ID)" class="btn btn-primary">Update</button>
+
+                </div>
+              </div>
+            </div>
           </td>
 
-      </tr>
+        </tr>
 
       </tbody>
     </table>
-    </div>
-    
-    
-  
-  
+  </div>
+
+
+
+

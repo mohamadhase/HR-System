@@ -1,12 +1,27 @@
 import { HttpClient,HttpHeaders } from "@angular/common/http";
 export class AppSettings{
     public static get API_ENDPOINT():string{
-        return 'http://localhost:5000/';
+        return 'https://training2-project.ew.r.appspot.com/';
     }
     public static get HEADER():HttpHeaders{
         return  new HttpHeaders({
             'Content-Type': 'application/json',
-            'x-acess-token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VyTmFtZSI6InN0cmluZyIsImV4cCI6MTY1OTcxNDQ0N30.15aMChRe3HypNJ4a_OwiE4ieI33WZpJzoERjWOi_YeI'
+            'x-acess-token': String(localStorage.getItem('token'))
+          })
+
+    }
+
+    public static get SLACK_TOKEN():string{
+        return 'xoxb-3867696838934-3874233291827-8ncepeRFiu0ZYQ920xK8kPLm';
+    }
+    public static get SLACK_END_POINT():string{
+        return 'https://slack.com/api/';
+    }
+    public static get SLACK_HEADER():HttpHeaders{
+        
+        return  new HttpHeaders({
+           'Content-type':'application/x-www-form-urlencoded'
+
           })
     }
 }

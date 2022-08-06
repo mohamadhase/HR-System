@@ -8,6 +8,7 @@ from HR import db
 from HR.models.Employee import Employee
 from HR.models.Authentication import Authentication
 from HR.models.Logger import create_logger
+from HR.models.Organization import Organization
 api = Namespace('Employee Attendance',
                 description='Employee Attendance related APIs')
 logger = create_logger(__name__)
@@ -152,3 +153,39 @@ class EmployeeAttendance(Resource):
         Employee.add_attend_day(organization_id, employee_id, attend_date)
         logger.info(f'Request completed successfully returning HTTP status code:{HTTPStatus.OK.value}')
         return attend_date, HTTPStatus.OK.value
+@api.route('/get_all_attend')
+class GetAttend(Resource):
+    @api.doc(description="Get all employee attendance", security='apikey')
+    @api.response(HTTPStatus.OK.value, HTTPStatus.OK.phrase)
+    @api.response(HTTPStatus.NOT_FOUND.value, HTTPStatus.NOT_FOUND.phrase)
+    @api.response(HTTPStatus.BAD_REQUEST.value, HTTPStatus.BAD_REQUEST.phrase)
+    @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
+    @api.param('Day', 'Day of the month', required=True)
+    @api.param('Month', 'Month of the year', required=True)
+    @api.param('Year', 'Year', required=True)
+    @Authentication.token_required
+    def get(organization_id, self):
+        logger.info(f"GET /{organization_id}/employee/attendance")
+        res = {'Teams':[], 'Employees':[]}
+        #get the date
+        date = Employee.validate_date(request.args)
+        date['Date'] = Employee.dict_to_datetime(date)
+        
+        # get all teams and employees
+        org_info = Organization.get_info(organization_id,teams=True,employees=True)
+        teams = org_info['Teams']
+        employees = org_info['Employees']
+        #for each team get all employees
+        for team in teams:
+            team['Employees'] = [employee for employee in employees if employee['TeamID'] == team['Name']]
+            res['Teams'].append({'TeamName':team['Name'],'Attends':0})
+        
+        #for each employee check if he has attendance for the given date
+        for team in teams:
+            for employee in team['Employees']:
+                attend = Employee.is_attend(organization_id, employee['ID'], date)
+                if attend[0]==True:
+                    #if he has attendance update the number of attendances for the team in the response and add the employee to the response
+                    res['Teams'][teams.index(team)]['Attends'] += 1
+                    res['Employees'].append({'ID':employee['ID'],'EmployeeName':employee['Name'],'TeamName':team['Name'],'Hours':attend[1]['NumberOfHours']})
+        return res, HTTPStatus.OK.value

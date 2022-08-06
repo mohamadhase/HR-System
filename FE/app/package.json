@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "dev": "lite-server --baseDir='dist/app' --config=bs-config.json"
   },
   "private": true,
   "dependencies": {
@@ -18,8 +19,14 @@
     "@angular/platform-browser": "^14.0.0",
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
+    "chart.js": "^3.9.1",
+    "jwt-decode": "^3.1.2",
+    "lite-server": "^2.6.1",
+    "ng2-charts": "^4.0.0",
+    "ng2-search-filter": "^0.5.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "webpack": "^5.64.4",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

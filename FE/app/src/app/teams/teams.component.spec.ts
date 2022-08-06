@@ -5,7 +5,6 @@ import { TeamsComponent } from './teams.component';
 describe('TeamsComponent', () => {
   let component: TeamsComponent;
   let fixture: ComponentFixture<TeamsComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ TeamsComponent ]

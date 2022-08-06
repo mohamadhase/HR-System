@@ -3,18 +3,24 @@ import { ActivatedRoute } from '@angular/router';
 import { Employee } from 'src/models/Employee';
 import { TeamService } from '../../services/team.service';
 import { EmployeeService } from 'src/services/employee.service';
+import { AuthService } from 'src/services/auth.service';
 @Component({
   selector: 'app-team-view',
   templateUrl: './team-view.component.html',
   styleUrls: ['./team-view.component.css']
 })
 export class TeamViewComponent implements OnInit {
+  searchText:any;
   teamName:string = "";
   employees :Array<Employee>=[];
   noTeamEmployees: Array<Employee> = [];
-  constructor(private route:ActivatedRoute,private teamService:TeamService,private employeeService:EmployeeService) { }
+  constructor(private route:ActivatedRoute,private teamService:TeamService,
+    private employeeService:EmployeeService,private auth:AuthService) { }
 
   ngOnInit(): void {
+    if (this.auth.validateToken()==false){
+      window.location.href = "/home";
+    }
     this.route.params.subscribe(params=>{
       this.teamName = params['id'];
     }

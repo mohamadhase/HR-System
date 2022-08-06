@@ -99,7 +99,7 @@ class Employees(Resource):
     @api.response(HTTPStatus.UNAUTHORIZED.value, HTTPStatus.UNAUTHORIZED.phrase)
     @Authentication.token_required
     def post(organization_id, self):
-        logger.info('Post /eployee')
+        logger.info('Post /employee')
         # get new employee information
         employee_info = api.payload
         # check if the employee is exists
@@ -108,9 +108,10 @@ class Employees(Resource):
             abort(HTTPStatus.CONFLICT.value, {'error':'Employee already exists'})
         # chcek if the team is exists
         try:
-            if not Team.is_exists(organization_id, employee_info['TeamID'])[0]:
-                logger.error(f"Team {employee_info['TeamID']} does not exist returning HTTP status code:{HTTPStatus.NOT_FOUND.value}")
-                abort(HTTPStatus.NOT_FOUND.value, {'error':'Team not found'})
+            if employee_info['TeamID']!='':
+                if not Team.is_exists(organization_id, employee_info['TeamID'])[0]:
+                    logger.error(f"Team {employee_info['TeamID']} does not exist returning HTTP status code:{HTTPStatus.NOT_FOUND.value}")
+                    abort(HTTPStatus.NOT_FOUND.value, {'error':'Team not found'})
         except KeyError:
             # if team is not exists, set team id to None
             employee_info['TeamID'] = None

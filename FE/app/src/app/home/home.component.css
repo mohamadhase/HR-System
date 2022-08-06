@@ -1,4 +1,12 @@
-img { 
-    width: 100%;
-    height: 50%;
+
+body,h1 {font-family: "Raleway", sans-serif}
+
+body, html {height: 100%}
+.bgimg {
+  background-image: url('https://www.planfish.app/wp-content/uploads/2021/01/pexels-fauxels-3183183-1200x801.jpg');
+  height: 100vh;
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-color: red;
 }

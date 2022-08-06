@@ -54,34 +54,34 @@ class Authentication:
         """ decorator to check if the token is valid or not"""
         @wraps(f)
         def decorated(*args, **kwargs):
-            # logger.info(f'Checking the token for the request {request.path}')
+            logger.info(f'Checking the token for the request {request.path}')
 
-            # """ decorator to check if the token is valid or not 
+            """ decorator to check if the token is valid or not 
 
-            # Returns:
-            #     function: returns the function if the token is valid with the user name 
-            # """
-            # token = None
-            # # get the token from the header if it is present
-            # if 'x-acess-token' in request.headers:
-            #     token = request.headers['x-acess-token']
-            # # if no token is found, abort with 401 Unauthorized
-            # if not token:
+            Returns:
+                function: returns the function if the token is valid with the user name 
+            """
+            token = None
+            # get the token from the header if it is present
+            if 'x-acess-token' in request.headers:
+                token = request.headers['x-acess-token']
+            # if no token is found, abort with 401 Unauthorized
+            if not token:
 
-            #     logger.error(f'request {request.path} does not contain a token returning {HTTPStatus.UNAUTHORIZED}')
-            #     abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is missing'})
-            # try:
-            #     # try to decode the token 
-            #     logger.info('Try to decode the token')
-            #     data = jwt.decode(
-            #         token, app.config['SECRET_KEY'], algorithms=['HS256'])
-            #     # get the user name from the token if it is valid
-            #     current_user = data['UserName']
-            #     logger.info('Token is valid')
-            # except Exception:
-            #     # if the token is invalid, abort with 401 Unauthorized
-            #     logger.error(f'request {request.path} contains an invalid token returning {HTTPStatus.UNAUTHORIZED}')
-            #     abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is invalid'})
+                logger.error(f'request {request.path} does not contain a token returning {HTTPStatus.UNAUTHORIZED}')
+                abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is missing'})
+            try:
+                # try to decode the token 
+                logger.info('Try to decode the token')
+                data = jwt.decode(
+                    token, app.config['SECRET_KEY'], algorithms=['HS256'])
+                # get the user name from the token if it is valid
+                current_user = data['UserName']
+                logger.info('Token is valid')
+            except Exception:
+                # if the token is invalid, abort with 401 Unauthorized
+                logger.error(f'request {request.path} contains an invalid token returning {HTTPStatus.UNAUTHORIZED}')
+                abort(HTTPStatus.UNAUTHORIZED, {'error': 'Token is invalid'})
             current_user = 'string'
             return f(current_user, *args, **kwargs)
 

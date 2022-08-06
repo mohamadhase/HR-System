@@ -14,8 +14,8 @@ export class EmployeeService {
     this.http.get<Array<Employee>>(AppSettings.API_ENDPOINT + 'organization/info?employees=1&teams=0',{headers:AppSettings.HEADER}).subscribe(
       data => {
         for(let emp of Object(data)['Employees']){
-          if (withoutTeam){
-            if(emp.TeamID == null){
+          if (withoutTeam==true){
+            if(emp.TeamID == null||emp.TeamID == ''){
               let obj:Employee = {
             ID:emp['ID'],
             Name:emp['Name'],
@@ -65,6 +65,29 @@ export class EmployeeService {
       }
     )
     return employee;
+  }
+  deleteEmployee(id:string):void{
+     this.http.delete(AppSettings.API_ENDPOINT + 'employee/' + id,{headers:AppSettings.HEADER}).subscribe();
+  }
+  updateEmployee(employee:Employee):void{
+    this.http.put(AppSettings.API_ENDPOINT + 'employee/' +
+     employee.ID+`?employee_address=${employee.Address}&employee_phone=${employee.Phone}&employee_email=$${employee.Email}&employee_name=${employee.Name}`,NaN,{headers:AppSettings.HEADER}).subscribe();
+  }
+
+  createEmployee(employee:Employee): Observable<any>{
+    return this.http.post(AppSettings.API_ENDPOINT + 'employee/',employee,{headers:AppSettings.HEADER});
+  }
+  getSlackInfo(id:string):Observable<any>{
+    let body = new URLSearchParams();
+    body.set('token',AppSettings.SLACK_TOKEN);
+    return this.http.post(AppSettings.SLACK_END_POINT + 'users.info?user='+id,body,{headers:AppSettings.SLACK_HEADER});
+  }
+  //http://localhost:5000/employee/111/attendance?Year=11&Month=10&Day=2011
+  getEmployeeAttendance(id:string,year:number,month:number,day:number):Observable<any>{
+    return this.http.get(AppSettings.API_ENDPOINT + 'employee/' + id + '/attendance?Year=' + year + '&Month=' + month + '&Day=' + day,{headers:AppSettings.HEADER});
+  }
+  getAttendReport(year:number,month:number,day:number):Observable<any>{
+    return this.http.get(AppSettings.API_ENDPOINT + 'employee' + '/get_all_attend?Year=' + year + '&Month=' + month + '&Day=' + day,{headers:AppSettings.HEADER});
   }
 
 }

@@ -11,7 +11,11 @@ import { TeamsComponent } from './teams/teams.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TeamViewComponent } from './team-view/team-view.component';
-import { EmployeeViewComponent } from './employee-view/employee-view.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FormsModule } from '@angular/forms';
+import { ReportsComponent } from './reports/reports.component';
+import { NgChartsModule } from 'ng2-charts';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -23,14 +27,17 @@ import { EmployeeViewComponent } from './employee-view/employee-view.component';
     TeamsComponent,
     EmployeesComponent,
     TeamViewComponent,
-    EmployeeViewComponent
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    Ng2SearchPipeModule,
+    FormsModule,
+    NgChartsModule
+    
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
