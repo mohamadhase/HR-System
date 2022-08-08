@@ -2,6 +2,15 @@
 <div id="demo" class="container">
     <label for="startDate" date>Select Date</label>
     <input id="startDate" class="form-control" type="date" (change)="onDateChange()" />
+    <div  class="char-type-choice">
+        <label for="chartType">Select Chart Type</label>
+        <select id="chartType" class="form-control"  (change)="changeType()">
+            <option value="bar" selected>Bar</option>
+            <option value="pie">Pie</option>
+        </select>
+
+    </div>
+
 
 </div>
 <br>
@@ -12,13 +21,19 @@
     <div class="container hh">
         <div class="row">
             <div class="col-8">
-                <canvas id="chart"></canvas>
+                <div id="char-container"  class="chart-container" style="position: relative; height:40vh; width:35vw;background-color:white">
+                    <canvas   id="chart"></canvas>
+
+                </div>
+
     
             </div>
             <div class="col-4 chart-text table2 ">
                 <!-- small table for the team name and number of employee attended -->
                 <input  [(ngModel)]="teamSearch"  class="fa fa-search form-control" type="text" name="search"autocomplete="off" placeholder=" &#61442;
                 Search for Team"> 
+                <!-- two buttons to choose between bar or pie chart at the first the bar is selected -->
+
                 <table class="table table-striped table table-hover table-mc-light-blue ">
                     <thead>
                         <tr>

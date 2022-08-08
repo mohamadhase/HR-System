@@ -103,7 +103,7 @@ export class EmployeesComponent implements OnInit {
       if (data['ok']==false){
        alert('Slack user not found');
        //redirect the user to the home page
-       window.location.reload();
+       console.log(data);
       }
       console.log(data['user']);
       this.employeeSlack = data['user'];

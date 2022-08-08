@@ -12,7 +12,7 @@ export class AppSettings{
     }
 
     public static get SLACK_TOKEN():string{
-        return 'xoxb-3867696838934-3874233291827-8ncepeRFiu0ZYQ920xK8kPLm';
+        return 'xoxb-3867696838934-3874233291827-guuIX06ME5hZHeYbAkMzcbVU';
     }
     public static get SLACK_END_POINT():string{
         return 'https://slack.com/api/';
