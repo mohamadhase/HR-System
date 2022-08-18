@@ -8,6 +8,19 @@ import logging
 import slack
 from slackeventsapi import SlackEventAdapter 
 from flask_cors import CORS
+from celery import Celery
+
+def make_celery(app):
+    celery = Celery(app.import_name,broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
 #internal imports
 from HR.models.Logger import *
 # create logger 
@@ -35,7 +48,9 @@ except Exception as e:
     logger.critical('Firebase app initialization failed')
     logger.exception(e)
     exit()
-    
+app.config['CELERY_BROKER_URL'] = ''
+celery = make_celery(app)
+# celery = Celery('Tasks',broker=)
 #initialize the firebase app
 firebase_app = None
 try :

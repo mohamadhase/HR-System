@@ -16,7 +16,6 @@ import { FormsModule } from '@angular/forms';
 import { ReportsComponent } from './reports/reports.component';
 import { NgChartsModule } from 'ng2-charts';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +34,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     HttpClientModule,
     Ng2SearchPipeModule,
     FormsModule,
-    NgChartsModule
+    NgChartsModule,
     
   ],
   bootstrap: [AppComponent]

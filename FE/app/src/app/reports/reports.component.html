@@ -1,15 +1,14 @@
 <script src="node_modules/chart.js/src/chart.js"></script>
 <div id="demo" class="container">
-    <label for="startDate" date>Select Date</label>
     <input id="startDate" class="form-control" type="date" (change)="onDateChange()" />
     <div  class="char-type-choice">
-        <label for="chartType">Select Chart Type</label>
         <select id="chartType" class="form-control"  (change)="changeType()">
             <option value="bar" selected>Bar</option>
             <option value="pie">Pie</option>
         </select>
 
     </div>
+    <button  class="form-control char-type-choice"  (click)="downloadPDF()">Save As PDF</button>
 
 
 </div>
@@ -23,7 +22,7 @@
             <div class="col-8">
                 <div id="char-container"  class="chart-container" style="position: relative; height:40vh; width:35vw;background-color:white">
                     <canvas   id="chart"></canvas>
-
+                    
                 </div>
 
     

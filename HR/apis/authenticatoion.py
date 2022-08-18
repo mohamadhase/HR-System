@@ -1,12 +1,25 @@
+import random 
+from time import sleep
 from flask_restx import Namespace, Resource
 from flask import abort
 from http import HTTPStatus 
 
+
 # internal imports
-from HR import api
+from HR import api,db
 from HR.models.Organization import Organization
 from HR.models.Authentication import Authentication
 from HR.models.Logger import create_logger
+from HR import celery
+
+@celery.task(name='celery_exmaple.write_to_file')
+def write_to_file(string):
+    sleep(1)
+    with open('demofile.txt','a') as f:
+        f.write(f"{string}\n")
+    return 'hi'
+
+
 logger = create_logger(__name__)
 api = Namespace('Authenticatoion', description='Authenticatoion related APIs')
 @api.route('/login')
@@ -64,7 +77,14 @@ class Register(Resource):
         logger.info(f"request completed returning status code {HTTPStatus.CREATED.value}")
         return {'message': 'Organization registered'}, HTTPStatus.CREATED.value
     
+    def get(self):
 
+        write_to_file.delay('a')
 
-
+@api.route('/register2')
+class Reg(Resource):
+    def get(self):
+        write_to_file('b')
+    
         
+

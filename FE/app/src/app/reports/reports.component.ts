@@ -6,6 +6,7 @@ import { Team } from 'src/models/Team';
 import { Employee } from 'src/models/Employee';
 import { EmployeeService } from 'src/services/employee.service';
 import { catchError } from 'rxjs/operators';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-reports',
@@ -174,8 +175,8 @@ export class ReportsComponent implements OnInit {
     //get the canvas element
     var ctx = document.getElementById('chart') as HTMLCanvasElement;
     let parent = document.getElementById('char-container') as HTMLDivElement;
-    parent.style.width = '35vw';
-    parent.style.height = '40vh';
+    parent.style.width = '25vw';
+    parent.style.height = '30vh';
     //get team names as labels
     let colors = this.teams.map(team => this.getRandomColor(team.TeamName))
     this.myChart = new Chart(ctx, {
@@ -194,7 +195,18 @@ export class ReportsComponent implements OnInit {
 
     });
     div.style.display = 'block';
+    
 
+  }
+  downloadPDF() {
+    //download myChart as pdf
+    let pdf = new jsPDF('landscape', 'cm', 'a4');
+    pdf.setFontSize(20);
+    //add the image full size of the page
+    pdf.addImage(this.myChart.toBase64Image(), 'PNG', 0, 0, 29.7, 21);
+    
+    pdf.save('chart.pdf');
+ 
   }
 
 
