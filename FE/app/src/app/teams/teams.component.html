@@ -1,0 +1,77 @@
+<div id="demo">
+  <h1>Teams Table </h1>
+  <h2>You Can Edit Add Delete View Teams from here</h2>
+  <button class="btn btn-success" ><a href="teams#open-modal-add">Add Team</a></button>
+  <input  [(ngModel)]="searchText"  class="fa fa-search form-control" type="text" name="search"autocomplete="off" placeholder=" &#61442;
+    Search for Team">  <div id="open-modal-add" class="modal-window">
+    <div>
+
+      <a href="teams#" title="Close" class="modal-close">Close</a>
+      <br>
+        <p class="form-button"><small>New Team</small></p>
+        <div class="form-group ">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="text" class="form-control" id="teamName" aria-describedby="emailHelp" placeholder="Name">
+          <small id="emailHelp" class="form-text text-muted">Type Team Name <b>must be unique</b></small>
+        </div>
+        <div class="form-group ">
+          <label for="exampleInputEmail1">Description</label>
+          <input type="text" class="form-control" id="teamDescription" aria-describedby="emailHelp" placeholder="Description">
+          <small id="emailHelp" class="form-text text-muted">Type Team Description</small>
+        </div>
+        <p  id="Error" class="form-text  text-center p-3 " style="color:red;"></p>
+
+        <div class="form-button">
+          <button  class="btn btn-primary" (click)="newTeam()">Create</button>
+          
+        </div>
+    </div>
+  </div>
+  <!-- Responsive table starts here -->
+  <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+  <div class="table-responsive-vertical shadow-z-1">
+  <!-- Table starts here -->
+  <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Team Name</th>
+          <th>Description</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of Teams | filter:searchText" >
+          <td data-title="ID">{{team.Name}}</td>
+          <td data-title="Name">{{team.Description}}</td>
+
+          <!-- edit view delete options buttons  -->
+          <td data-title="Options">
+            <a class="btn text-warning" href="teams#open-modal{{team.Name}}"  ><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn text-danger" (click)="deleteTeam(team)"><i class="fa fa-trash-o"></i> Delete</a>
+            <a class="btn text-info" href="team/{{team.Name}}"  ><i class="fa fa-eye"></i> View</a>
+
+        <div id="open-modal{{team.Name}}" class="modal-window">
+          <div>
+            <a href="teams#" title="Close" class="modal-close">Close</a>
+        
+            <br>
+              <p class="form-button"><small>Update {{team.Name}} informations</small></p>
+              <div class="form-group ">
+                <label for="exampleInputEmail1">Description</label>
+                <input type="text" class="form-control" id="teamDescription" aria-describedby="emailHelp" placeholder="Description">
+                <small id="emailHelp" class="form-text text-muted">Type Team Description</small>
+              </div>
+              <div class="form-button">
+                <button  (click)="updateTeam(team)" class="btn btn-primary">Update</button>
+                
+              </div>
+          </div>
+        </div>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  
+  
+

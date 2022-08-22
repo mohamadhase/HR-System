@@ -1,0 +1,83 @@
+[{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "*Welcome* to the HR Bot.\n\n"
+  }
+},
+{
+  "type": "divider"
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "*Admin Commands*"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "1. /userinfo [UserID] e.g /userinfo @mohamadhase  \n *get the information about given user*"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "2. /teams [TeamName] e.g /teams backend  \n * get the information about given team* \n *if the team name not given will return all teams in the org* "
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "3. /attendances [UserID] e.g /attendances @mohamadhase  \n *get is the given user is attended or not * \n  *if the UserID not given will return the list of all attended employees *"
+  }
+},
+{
+  "type": "divider"
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "*Employee Commands*"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "1. /addattend [NumberOfHours] \n *add me as an attended in this day with the given number of hours*"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "2. /deleteattend  \n *delete my attendance in this day *"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "3./getattend [Day/Month/Year]  \n *get the imformation about attendance in the given date *"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "4. /salary  \n *get the information about the salary in the current month *"
+  }
+},
+{
+  "type": "section",
+  "text": {
+      "type": "mrkdwn",
+      "text": "5. /attendreport[Month] [Year]  \n *get full report about your attendance in the given month *"
+  }
+}]

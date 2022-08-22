@@ -1,0 +1,10 @@
+firebase_admin
+Flask
+flask_restx
+PyJWT
+python-dotenv
+slackclient
+gunicorn==19.9.0
+slackeventsapi
+flask_cors
+# Werkzeug==2.1.2
