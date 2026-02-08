@@ -20,14 +20,14 @@
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
     "chart.js": "^3.9.1",
-    "jspdf": "^2.5.1",
+    "jspdf": "^4.1.0",
     "jwt-decode": "^3.1.2",
     "lite-server": "^2.6.1",
     "ng2-charts": "^4.0.0",
     "ng2-search-filter": "^0.5.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "webpack": "^5.64.4",
+    "webpack": "^5.104.1",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
